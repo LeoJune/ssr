@@ -3,32 +3,16 @@
     <div>
       <Logo />
       <h1 class="title">
-        nuxtNB1111dev
+        nuxtNB1111dev1
       </h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {}
+export default {
+  layout: 'layout'
+}
 </script>
 
 <style>
