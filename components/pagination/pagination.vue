@@ -1,25 +1,35 @@
 <template>
   <div class="list-pagination">
-    <button class="list-pagination-indexBtn" @click="goIndex">首页</button>
+    <button
+      class="list-pagination-indexBtn"
+      @click="goIndex"
+    >
+      首页
+    </button>
     <!-- ui图没有需求修改一页的条数page_size，最外层的页面给个死值 -->
     <el-pagination
-      @current-change="handleCurrentChange"
-      :page-size="pageSize"
-      :current-page.sync="currentPage"
       layout=" prev, pager, next"
+      :pageSize="pageSize"
+      :currentPage.sync="currentPage"
       :total="total"
+      @current-change="handleCurrentChange"
     ></el-pagination>
-    <button class="list-pagination-footeBtn" @click="goFoote">尾页</button>
+    <button
+      class="list-pagination-footeBtn"
+      @click="goFoote"
+    >
+      尾页
+    </button>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    current_page: {
-      type: Number,
-      default: 1
-    },
+    // current_page: {
+    //   type: Number,
+    //   default: 1
+    // },
     pageSize: {
       type: Number,
       default: 5

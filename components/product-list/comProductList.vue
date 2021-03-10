@@ -1,9 +1,10 @@
 <template>
   <div class="secondary-right-list">
     <div class="list-title">
-      <span :class="{ active: isActiveSort === 0 }" @click="changeSort(0)"
-        >综合</span
-      >
+      <span
+        :class="{ active: isActiveSort === 0 }"
+        @click="changeSort(0)"
+      >综合</span>
       <!-- <span :class="{'span-active':isActiveSort==1}" @click="changeSort(1)">
         降序
         <img :src="sortIconDescend" alt />
@@ -12,32 +13,35 @@
         升序
         <img :src="sortIconAscend" alt />
       </span>-->
-      <span class="price-sort" :class="checkActive" @click="changeSort(1)"
-        >价格</span
-      >
+      <span
+        class="price-sort"
+        :class="checkActive"
+        @click="changeSort(1)"
+      >价格</span>
     </div>
-    <div class="list-item" v-for="(item, index) in commodityList" :key="index">
+    <div
+      v-for="(item, index) in commodityList"
+      :key="index"
+      class="list-item"
+    >
       <div
+        style="cursor: pointer"
         class="list-item-img"
         @click="goDetail(item)"
-        style="cursor: pointer"
       >
-        <img :src="item.pic" alt />
+        <img
+          :src="item.pic"
+          alt
+        />
       </div>
       <div
+        style="cursor: pointer"
         class="list-item-content"
         @click="goDetail(item)"
-        style="cursor: pointer"
       >
         <div class="list-item-desc">
           <div class="list-item-desc-name">
-            {{
-              (item.brandName ? item.brandName : "") +
-              " " +
-              (item.name ? item.name : "") +
-              " " +
-              (item.productModel ? item.productModel : "")
-            }}
+            {{ (item.brandName ? item.brandName : "") + " " + (item.name ? item.name : "") + " " + (item.productModel ? item.productModel : "") }}
           </div>
           <div class="list-item-desc-info">
             适用机型：{{ item.productApplyType }}
@@ -49,15 +53,13 @@
           <div class="list-item-desc-info">重量：{{ item.weight }}kg</div>
           <!-- <div class="list-item-desc-info">状态：{{ item.status }}</div> -->
         </div>
-        <div class="list-item-collect" @click.stop="collect(item)">
+        <div
+          class="list-item-collect"
+          @click.stop="collect(item)"
+        >
           <div :class="item.productCollectStatus === 1 ? 'active-collect' : ''">
-            <img
-              :src="
-                item.productCollectStatus === 1
-                  ? collectIconActive
-                  : collectIcon
-              "
-            />收藏
+            <img :src="item.productCollectStatus === 1 ? collectIconActive : collectIcon" />
+            收藏
           </div>
         </div>
       </div>
@@ -71,20 +73,28 @@
             label="请输入数量"
             size="medium"
             :step="1"
-            :step-strictly="true"
+            :stepStrictly="true"
           ></el-input-number>
-          <div class="item-car" @click.stop="joinCart(item)">加入购物车</div>
+          <div
+            class="item-car"
+            @click.stop="joinCart(item)"
+          >
+            加入购物车
+          </div>
         </div>
         <div class="list-item-join-min">
           最低起订量：{{ item.productMinimumPurchase }}件
         </div>
       </div>
     </div>
-    <div class="nodata" v-if="!commodityList.length">
+    <div
+      v-if="!commodityList.length"
+      class="nodata"
+    >
       <p>暂无数据</p>
     </div>
     <Pagination
-      :current_page.sync="currentPage"
+      :currentPage.sync="currentPage"
       :page_size.sync="pageSize"
       :total.sync="total"
       @changeCurrent="changeCurrent"
@@ -101,7 +111,7 @@ import { productCollect } from '@/api/product'
 // const up = require('@/assets/images/secondary-up.png')
 // const upActive = require('@/assets/images/secondary-active-sort2.png')
 export default {
-  name: 'comProductList',
+  name: 'ComProductList',
   components: {
     Pagination
   },
@@ -119,19 +129,6 @@ export default {
       default: 300
     }
   },
-  created () {
-  },
-  watch: {
-    commodityList: function () {
-      this.quantity = []
-      // console.log(this.commodityList)
-      if (this.commodityList) {
-        this.commodityList.map(v => {
-          this.quantity.push(v.productMinimumPurchase)
-        })
-      }
-    }
-  },
   data () {
     return {
       isActiveSort: 0,
@@ -142,7 +139,7 @@ export default {
     }
   },
   computed: {
-    checkActive: function () {
+    checkActive () {
       if (this.isActiveSort === 1) {
         return 'active up'
       } else if (this.isActiveSort === 2) {
@@ -155,17 +152,31 @@ export default {
       'hasLogin'
     ])
   },
+  watch: {
+    commodityList () {
+      this.quantity = []
+      // console.log(this.commodityList)
+      if (this.commodityList) {
+        this.commodityList.map(v => {
+          this.quantity.push(v.productMinimumPurchase)
+        })
+      }
+    }
+  },
+  created () {
+  },
   methods: {
     // 点击排序
     changeSort (i) {
       if (i === 0) {
         this.isActiveSort = 0 // 0代表综合排序
       } else {
-        if (this.isActiveSort === 1) {
-          this.isActiveSort = 2 // 2自然就代表降序
-        } else {
-          this.isActiveSort = 1 // 既然第一下点击要求升序,那么1就代表升序
-        }
+        // if (this.isActiveSort === 1) {
+        //   this.isActiveSort = 2 // 2自然就代表降序
+        // } else {
+        //   this.isActiveSort = 1 // 既然第一下点击要求升序,那么1就代表升序
+        // }
+        this.isActiveSort = this.isActiveSort === 1 ? 2 : 1
       }
       this.$emit('sortChange', this.isActiveSort)
     },
@@ -176,28 +187,28 @@ export default {
       if (!this.hasLogin) {
         this.$message.warning('请先登录')
         this.$router.push('/login/loginIndex')
+        return
+      }
+      if (item.productCollectStatus === 1) {
+        console.log('quxiao')
+        item.productCollectStatus = 0
+        productCollect(item).then(res => {
+          this.$message({
+            type: 'success',
+            duration: 1000,
+            message: '取消收藏成功'
+          })
+        })
       } else {
-        if (item.productCollectStatus === 1) {
-          console.log('quxiao')
-          item.productCollectStatus = 0
-          productCollect(item).then(res => {
-            this.$message({
-              type: 'success',
-              duration: 1000,
-              message: '取消收藏成功'
-            })
+        console.log('shoucang')
+        item.productCollectStatus = 1
+        productCollect(item).then(res => {
+          this.$message({
+            type: 'success',
+            duration: 1000,
+            message: '收藏成功'
           })
-        } else {
-          console.log('shoucang')
-          item.productCollectStatus = 1
-          productCollect(item).then(res => {
-            this.$message({
-              type: 'success',
-              duration: 1000,
-              message: '收藏成功'
-            })
-          })
-        }
+        })
       }
     },
     // 计步器数量改变

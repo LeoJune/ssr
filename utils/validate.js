@@ -55,7 +55,7 @@ export const isPhone = (rule, str, callback) => {
 }
 
 export const utils = {
-  isPhone: function (str) {
+  isPhone (str) {
     const reg = /^1[34578][0-9]\d{8}$/
     return reg.test(str)
   },
@@ -63,7 +63,7 @@ export const utils = {
   //     const reg = new RegExp("/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/")
   //     return reg.test(str)
   // },
-  isName: function (str) {
+  isName (str) {
     const reg = /^[\u4E00-\u9FA5]{2,6}$/
     return reg.test(str)
   }
@@ -71,7 +71,7 @@ export const utils = {
 
 export function formatArrToFitCarousel (arr) {
   if (!arr || arr.length === 0) {
-    console.log('return kong')
+    // console.log('return kong')
     return []
   }
   const formatArr = []

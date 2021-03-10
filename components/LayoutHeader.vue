@@ -14,7 +14,7 @@
         <!-- <input type="text" placeholder="请输入产品名称 品牌 型号" /> -->
         <el-autocomplete
           v-model="searchKeyword"
-          :fetch-suggestions="querySearchAsync"
+          :fetchSuggestions="querySearchAsync"
           placeholder="请输入产品名称 新旧件号 机型"
           @select="handleSelect"
           @keyup.enter.native="toSearchList"
@@ -170,7 +170,7 @@
         ref="loginForm"
         :model="loginForm"
         :rules="rules"
-        label-width="150px"
+        labelWidth="150px"
         size="small"
       >
         <el-form-item

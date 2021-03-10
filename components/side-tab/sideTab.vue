@@ -4,10 +4,10 @@
       <li
         v-for="(item, index) in tabList"
         :key="index"
-        @click="toJump(item)"
         :class="{
           'li-active': activeTab == item.id || activeTab == item.itemId,
         }"
+        @click="toJump(item)"
       >
         {{ item.name || item.itemName }}
       </li>
@@ -21,7 +21,10 @@
         @click="toDetail(item)"
       >
         <div class="item-img">
-          <img :src="item.pic || item.defaultProductImg" alt />
+          <img
+            :src="item.pic || item.defaultProductImg"
+            alt
+          />
         </div>
         <div class="item-name">{{ item.productName }}</div>
         <div class="item-price">单价：￥{{ item.price }}</div>
@@ -34,12 +37,17 @@
 export default {
   props: {
     tabList: {
-      type: Array
+      type: Array,
+      default: () => []
     },
     hotList: {
-      type: Array
+      type: Array,
+      default: () => []
     },
-    activeTab: String
+    activeTab: {
+      type: String,
+      default: ''
+    }
     // brandTab: Boolean
   },
   data () {

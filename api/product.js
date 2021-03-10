@@ -30,7 +30,7 @@ export function getProductInDictionary (params) { // 获取位置在字典中管
   })
 }
 
-export function getProductDetail (id, params) { //  商品详情
+export function getProductDetail ({ id, params }) { //  商品详情
   return request({
     url: '/product/info/' + id,
     method: 'get',

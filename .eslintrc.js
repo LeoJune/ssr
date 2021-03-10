@@ -15,6 +15,9 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
+    "vue/no-v-html": "off",
+    "vue/html-indent": "off",
+    "no-console": "off",
     'arrow-parens': 'off',
     "vue/html-self-closing": ["error", {
       "html": {
@@ -24,6 +27,14 @@ module.exports = {
       },
       "svg": "always",
       "math": "always"
+    }],
+    "vue/attribute-hyphenation": ["error", "never", {
+      "ignore": ["custom-prop"]
+    }],
+    "vue/singleline-html-element-content-newline": ["error", {
+      "ignoreWhenNoAttributes": true,
+      "ignoreWhenEmpty": true,
+      "ignores": ["div"]
     }]
   }
 }

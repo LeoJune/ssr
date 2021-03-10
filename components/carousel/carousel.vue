@@ -2,32 +2,46 @@
   <div class="home-right-plate">
     <div class="home-right-plate-title">
       <div class="title-left">
-        <img :src="titleIcon" alt class="categroy-icon" v-if="showIcon" />
+        <img
+          v-if="showIcon"
+          :src="titleIcon"
+          alt
+          class="categroy-icon"
+        />
         {{ title }}
       </div>
-      <div
-        class="title-right"
-        v-if="isShowRight"
-        @click="checkMore(categoryId, categoryName)"
-      >
-        查看更多>
-      </div>
+      <nuxt-link :to="{path:'/secondaryClassification',query:{id:categoryId,name:categoryName}}">
+        <!-- this.$router.push({ path: '/secondaryClassification', query: { id, name } }) -->
+        <div
+          v-if="isShowRight"
+          class="title-right"
+          @click="checkMore(categoryId, categoryName)"
+        >
+          查看更多>
+        </div>
+      </nuxt-link>
     </div>
     <el-carousel
       :interval="4000"
       arrow="always"
       height="440px"
-      indicator-position="none"
+      indicatorPosition="none"
     >
-      <el-carousel-item v-for="(item, index) in dataList" :key="index">
+      <el-carousel-item
+        v-for="(item, index) in dataList"
+        :key="index"
+      >
         <div
-          class="home-right-plate-item"
           v-for="(jtem, i) in item"
           :key="i"
+          class="home-right-plate-item"
           @click="goDetail(jtem)"
         >
           <div class="home-right-plate-item-img">
-            <img :src="jtem.pic || defaultProductImg" alt />
+            <img
+              :src="jtem.pic || defaultProductImg"
+              alt
+            />
           </div>
           <div class="home-right-plate-item-title">
             {{ jtem.name || jtem.productName }}
@@ -41,7 +55,10 @@
           </div>
           <div class="home-right-plate-item-price">￥{{ jtem.price }}</div>
           <button @click.stop="joinCar(jtem)">
-            <img :src="img" alt />加入购物车
+            <img
+              :src="img"
+              alt
+            />加入购物车
           </button>
         </div>
       </el-carousel-item>
@@ -61,16 +78,20 @@ export default {
       default: '../assets/images/home-right-new.png'
     },
     dataList: {
-      type: null
+      type: null,
+      default: []
     },
     categoryId: {
-      type: Number
+      type: Number,
+      default: 0
     },
     categoryName: {
-      type: String
+      type: String,
+      default: ''
     },
     defaultProductImg: {
-      type: String
+      type: String,
+      default: ''
     },
     isShowRight: {
       type: Boolean,
@@ -99,7 +120,7 @@ export default {
       this.$emit('joinCar', item)
     },
     checkMore (id, name) {
-      this.$router.push({ path: '/secondaryClassification', query: { id: id, name: name } })
+      this.$router.push({ path: '/secondaryClassification', query: { id, name } })
     },
     goDetail (item) {
       if (this.needStatistics) {
@@ -140,6 +161,7 @@ export default {
     .title-right {
       width: 144px;
       height: 40px;
+      color: #fff;
       font-size: 16px;
       background-color: #116aa7;
       border-radius: 4px;

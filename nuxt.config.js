@@ -1,4 +1,7 @@
-
+const URL = {
+  development: "http://58.49.89.99:8056/front",
+  production: "http://58.49.89.99:8056/front"
+}[process.env.VUE_APP_API];
 export default {
   /*
   ** Nuxt rendering mode
@@ -29,7 +32,8 @@ export default {
   ** Global CSS
   */
   css: [
-    'element-ui/lib/theme-chalk/index.css'
+    'element-ui/lib/theme-chalk/index.css',
+    '@/assets/css/reset.css'
   ],
   /*
   ** Plugins to load before mounting the App
@@ -37,6 +41,7 @@ export default {
   */
   plugins: [
     '@/plugins/element-ui'
+    // '@/plugins/axios'
   ],
   /*
   ** Auto import components
@@ -56,18 +61,40 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios'
+    // '@nuxtjs/proxy'
   ],
+  // 环境变量配置
+  env: {
+    VUE_APP_API: process.env.VUE_APP_API
+  },
   /*
   ** Axios module configuration
   ** See https://axios.nuxtjs.org/options
   */
-  axios: {},
+  axios: {
+    baseURL: URL
+  },
+  // proxy: {
+  //   '/api': {
+  //     target: 'http://58.49.89.99:8055',
+  //     pathRewrite: { '^/api': '' },
+  //     changeOrigin: true,
+  //     ws: false
+  //   },
+  //   '/front': {
+  //     target: 'http://58.49.89.99:8056',
+  //     pathRewrite: { '^/front': '' },
+  //     changeOrigin: true,
+  //     // logLevel: 'debug',
+  //     ws: false
+  //   }
+  // },
   /*
   ** Build configuration
   ** See https://nuxtjs.org/api/configuration-build/
   */
   build: {
-    additionalExtensions: ["jsx"],
+    // additionalExtensions: ["jsx"],
     transpile: [/^element-ui/]
   }
 }

@@ -1,6 +1,13 @@
 <template>
-  <div class="backTop" v-if="isShowBack" @click="backToTop">
-    <img :src="img" alt />
+  <div
+    v-if="isShowBack"
+    class="backTop"
+    @click="backToTop"
+  >
+    <img
+      :src="img"
+      alt
+    />
   </div>
 </template>
 
@@ -11,6 +18,15 @@ export default {
       img: require('../../assets/images/home-gotop.jpg'),
       isShowBack: true
     }
+  },
+  created () {
+    //  在路由meta里控制是否显示回到顶部
+    if (this.$route.meta.backTop === false) {
+      this.isShowBack = this.$route.meta.backTop
+    }
+  },
+  mounted () {
+    window.addEventListener('scroll', this.showbtn, true)
   },
   methods: {
     // 显示回到顶部按钮
@@ -27,7 +43,7 @@ export default {
       * 4. 最后记得在移动到顶部时，清除定时器
     */
     backToTop () {
-      var timer = setInterval(function () {
+      const timer = setInterval(function () {
         const osTop = document.documentElement.scrollTop || document.body.scrollTop
         const ispeed = Math.floor(-osTop / 5)
         document.documentElement.scrollTop = document.body.scrollTop = osTop + ispeed
@@ -37,17 +53,7 @@ export default {
         }
       }, 15)
     }
-  },
-  mounted () {
-    window.addEventListener('scroll', this.showbtn, true)
-  },
-  created () {
-    //  在路由meta里控制是否显示回到顶部
-    if (this.$route.meta.backTop === false) {
-      this.isShowBack = this.$route.meta.backTop
-    }
   }
-
 }
 </script>
 

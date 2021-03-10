@@ -1,25 +1,25 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
-import store from '@/store'
 import { getToken } from '@/utils/auth'
+import { state, mutations } from '@/store/user'
 
 // let url = ''
-// if (process.env.NODE_ENV === 'production') {
-//   url = process.env.BASE_API
+// if (process.server) {
+//   url = process.env.SERVER_API
 // } else {
-//   url = '/api'
+//   url = '/front'
 // }
 // 创建axios实例
 const service = axios.create({
   //  baseURL: process.env.BASE_API, // api的base_url
-  baseURL: '/front',
+  baseURL: '',
   timeout: 15000 // 请求超时时间
   // withCredentials: true
 })
 
 //  request拦截器
 service.interceptors.request.use(config => {
-  if (store.getters.token) {
+  if (state.token) {
     config.headers.Authorization = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   // if (config.type) {
@@ -57,7 +57,7 @@ service.interceptors.response.use(
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch('FedLogout').then(() => {
+          mutations.dispatch('FedLogout').then(() => {
             location.reload()// 为了重新实例化vue-router对象 避免bug
           })
         })

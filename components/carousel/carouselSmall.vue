@@ -1,9 +1,24 @@
 <template>
   <div class="home-right-plate-small">
-    <el-carousel :interval="5000" arrow="always" height="132px" indicator-position="none">
-      <el-carousel-item v-for="(item,index) in dataList" :key="index">
-        <div class="home-right-plate-item" v-for="(jtem,i) in item" :key="i">
-          <img :src="jtem.pic" alt />
+    <el-carousel
+      :interval="5000"
+      arrow="always"
+      height="132px"
+      indicatorPosition="none"
+    >
+      <el-carousel-item
+        v-for="(item,index) in dataList"
+        :key="index"
+      >
+        <div
+          v-for="(jtem,i) in item"
+          :key="i"
+          class="home-right-plate-item"
+        >
+          <img
+            :src="jtem.pic"
+            alt
+          />
         </div>
       </el-carousel-item>
     </el-carousel>
