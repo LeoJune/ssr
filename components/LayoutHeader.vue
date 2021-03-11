@@ -257,7 +257,18 @@ export default {
       'cartList'
     ])
   },
-  created () {
+  // created () {
+  //   if (!this.$route.meta.notShowBanner) {
+  //     this.isShowBanner = true
+  //   } else {
+  //     this.isShowBanner = false
+  //   }
+  //   this.getBanner()
+  //   this.getBrandList()
+  //   this.getAllCategory()
+  //   this.getRecommdNavAndHome()
+  // },
+  beforeMount () {
     if (!this.$route.meta.notShowBanner) {
       this.isShowBanner = true
     } else {

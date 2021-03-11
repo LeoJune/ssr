@@ -3,8 +3,7 @@
 export default function ({ $axios }) {
   $axios.onRequest(config => {
     if (process.server) {
-      $axios.baseURL = process.env.SERVER_API
-      console.log($axios.baseURL)
+      // $axios.baseURL = process.env.SERVER_API
       return config
     }
     if (process.client) {

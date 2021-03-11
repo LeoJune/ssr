@@ -102,7 +102,10 @@ export default {
       friendLinkList: []
     }
   },
-  created () {
+  // created () {
+  //   this.getList()
+  // },
+  beforeMount () {
     this.getList()
   },
   methods: {

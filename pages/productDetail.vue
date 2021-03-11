@@ -218,15 +218,19 @@ export default {
     const id = context.query.id
     const flagId = context.query.flagId
     const asyncData = {}
-    const params = flagId ? { id, params: { flagId } } : { id }
-    return getProductDetail({ params }).then(res => {
-      // return context.app.$axios.get('http://58.49.89.99:8056/product/info/' + id).then(res => {
+    // const params = flagId ? { id, params: { flagId } } : { id }
+    return context.app.$axios.request('http://58.49.89.99:8056/product/info/' + id, {
+      method: 'GET',
+      params: { flagId }
+    }).then(response => {
+      console.log(response.data)
+      const res = response.data
       console.log('from server request')
       res.data.quantity = res.data.productMinimumPurchase
       res.data.productPic = res.data.pic
       res.data.productName = res.data.name
       res.data.productPrice = res.data.price // 收藏需要的属性
-      asyncData.productInfo = res.data.data
+      asyncData.productInfo = res.data
       asyncData.imgs = []
       if (asyncData.productInfo.pic) {
         asyncData.imgs.push(asyncData.productInfo.pic)
@@ -241,6 +245,8 @@ export default {
         asyncData.imgs.push(asyncData.productInfo.albumPics)
       }
       return asyncData
+    }).catch(err => {
+      console.log(err + ' from catch err!!!!!!!!!!!!!!!!!!!!!')
     })
     // return getProductDetail(params).then(res => {
     //   res.data.quantity = res.data.productMinimumPurchase
@@ -343,7 +349,15 @@ export default {
       this.getDetail(this.$route.query.id)
     }
   },
-  created () {
+  // created () {
+  //   // const id = this.$route.query.id
+  //   // this.getDetail(id)
+  //   this.getTabData()
+
+  //   this.getRecommend()
+  //   this.getHot()
+  // },
+  beforeMount () {
     // const id = this.$route.query.id
     // this.getDetail(id)
     this.getTabData()

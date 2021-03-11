@@ -12,7 +12,7 @@ import { state, mutations } from '@/store/user'
 // 创建axios实例
 const service = axios.create({
   //  baseURL: process.env.BASE_API, // api的base_url
-  baseURL: '',
+  baseURL: '/front',
   timeout: 15000 // 请求超时时间
   // withCredentials: true
 })
