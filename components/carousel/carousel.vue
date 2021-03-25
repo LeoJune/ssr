@@ -15,7 +15,6 @@
         <div
           v-if="isShowRight"
           class="title-right"
-          @click="checkMore(categoryId, categoryName)"
         >
           查看更多>
         </div>
@@ -35,25 +34,26 @@
           v-for="(jtem, i) in item"
           :key="i"
           class="home-right-plate-item"
-          @click="goDetail(jtem)"
         >
-          <div class="home-right-plate-item-img">
-            <img
-              :src="jtem.pic || defaultProductImg"
-              alt
-            />
-          </div>
-          <div class="home-right-plate-item-title">
-            {{ jtem.name || jtem.productName }}
-          </div>
-          <div class="home-right-plate-item-info">
-            <div class="info-item">品牌：{{ jtem.brandName }}</div>
-            <div class="info-item">重量：{{ jtem.weight }}</div>
-            <div class="info-item">
-              最低起订量：{{ jtem.productMinimumPurchase }}件
+          <nuxt-link :to="{ path:'/productDetail',query: (item.needStatistics?{id: jtem.productId, flagId: jtem.id}:{id: jtem.productId})}">
+            <div class="home-right-plate-item-img">
+              <img
+                :src="jtem.pic || defaultProductImg"
+                alt
+              />
             </div>
-          </div>
-          <div class="home-right-plate-item-price">￥{{ jtem.price }}</div>
+            <div class="home-right-plate-item-title">
+              {{ jtem.name || jtem.productName }}
+            </div>
+            <div class="home-right-plate-item-info">
+              <div class="info-item">品牌：{{ jtem.brandName }}</div>
+              <div class="info-item">重量：{{ jtem.weight }}</div>
+              <div class="info-item">
+                最低起订量：{{ jtem.productMinimumPurchase }}件
+              </div>
+            </div>
+            <div class="home-right-plate-item-price">￥{{ jtem.price }}</div>
+          </nuxt-link>
           <button @click.stop="joinCar(jtem)">
             <img
               :src="img"
@@ -118,16 +118,6 @@ export default {
         item.needStatistics = true
       }
       this.$emit('joinCar', item)
-    },
-    checkMore (id, name) {
-      this.$router.push({ path: '/secondaryClassification', query: { id, name } })
-    },
-    goDetail (item) {
-      if (this.needStatistics) {
-        this.$router.push({ path: '/productDetail', query: { id: item.productId, flagId: item.id } })
-      } else {
-        this.$router.push({ path: '/productDetail', query: { id: item.productId } })
-      }
     }
   }
 }

@@ -231,9 +231,10 @@ export default {
       return formatCorperate(arr, num)
     },
     joinCart (item, needStatistics) {
+      console.log('加入购物车点击')
       if (!this.hasLogin) {
         this.$message.warning('请先登录')
-        this.$router.push('/login/loginIndex')
+        this.$router.push('/login')
       } else {
         if (needStatistics) {
           item.recommendFlag = item.id
@@ -241,7 +242,7 @@ export default {
         if (item.needStatistics) {
           item.recommendFlag = item.id
         }
-        this.$store.dispatch('AddGood', item).then(res => {
+        this.$store.dispatch('cart/AddGood', item).then(res => {
           this.$message({
             type: 'success',
             duration: 1000,

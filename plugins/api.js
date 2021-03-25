@@ -21,6 +21,14 @@ export default ({ app: { $request } }, inject) => {
       })
     },
     // -----------------------------------
+    // seo信息获取 就是后台系统设置的接口，里面有很多用不上的信息
+    getSeoConfig () {
+      return $request({
+        url: '/systemsetting/getSysConf',
+        method: 'get'
+      })
+    },
+    // -----------------------------------
     // 布局header接口
     // banner图
     getBrandList (params) {

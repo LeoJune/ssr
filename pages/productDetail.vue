@@ -8,7 +8,6 @@
         :tabList.sync="tabList"
         :hotList.sync="hotList"
         :activeTab="nowTab"
-        @getTabItem="getTabItem"
       ></SideTab>
       <div class="product-detail-right">
         <div class="product-detail-right-title">
@@ -190,23 +189,13 @@
 </template>
 
 <script>
-import { getProductDetail, getAllCategory, getProductInDictionary, productCollect } from '@/api/product'
+// import { getProductDetail, getAllCategory, getProductInDictionary, productCollect } from '@/api/product'
 // import store from '@/store'
 import { mapGetters } from 'vuex'
 import { formatArrToFitCarousel } from '@/utils/validate'
 import SideTab from '@/components/side-tab/sideTab.vue'
 import Carousel from '@/components/carousel/carousel.vue'
 
-// const getData = (store, id, params) => {
-//   return new Promise((resolve, reject) => {
-//     store.dispatch('getProductDetail', id, params).then(res => {
-//       const productInfo = res.data
-//       resolve(productInfo)
-//     }).catch(err => {
-//       reject(err)
-//     })
-//   })
-// }
 export default {
   components: {
     SideTab,
@@ -215,10 +204,14 @@ export default {
   async asyncData ({ query, app }) {
     const id = query.id
     const flagId = query.flagId
-    console.log(id, flagId)
     const params = flagId ? { id, params: { flagId } } : { id }
-    let imgs = []
-    const productInfo = await app.$api.getProductDetail(params).then(res => {
+    let productInfo = {}
+    let imgs = [] // 商品相册
+    let tabList = [] // 左边一级分类
+    let hotList = [] // 热卖商品
+    let recommendList = [] // 推荐商品
+    await app.$api.getProductDetail(params).then(response => {
+      const res = response.data
       res.quantity = res.productMinimumPurchase
       res.productPic = res.pic
       res.productName = res.name
@@ -234,13 +227,29 @@ export default {
       } else if (res.albumPics) {
         imgs.push(res.albumPics)
       }
-      return res
+      productInfo = res
     }).catch(err => {
       console.log(err)
-      return { publishStatus: 0 }
+      productInfo = { publishStatus: 0 }
     })
-    console.log(productInfo)
-    return { productInfo, imgs }
+    await app.$api.getAllCategory().then(res => {
+      tabList = res.data
+    })
+    await app.$api.getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
+      if (res.data.length > 7) {
+        hotList = res.data.slice(0, 7)
+      } else {
+        hotList = res.data
+      }
+    })
+    await app.$api.getAllCategory({ type: 2, recommendStatus: 1 }).then(res => {
+      for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
+        res.data[i].quantity = res.data[i].productMinimumPurchase || 1
+        res.data[i].productPic = res.data[i].pic
+      }
+      recommendList = formatArrToFitCarousel(res.data)
+    })
+    return { productInfo, imgs, tabList, hotList, recommendList }
   },
   data () {
     return {
@@ -328,97 +337,34 @@ export default {
       'hasLogin'
     ])
   },
-  watch: {
-    $route () {
-      console.log('luyoubianhual')
-      this.getDetail(this.$route.query.id)
-    }
-  },
-  // created () {
-  //   // const id = this.$route.query.id
-  //   // this.getDetail(id)
-  //   this.getTabData()
-
-  //   this.getRecommend()
-  //   this.getHot()
+  // watch: {
+  //   $route () {
+  //     console.log('luyoubianhual')
+  //     this.getDetail(this.$route.query.id)
+  //   }
   // },
+  watchQuery: true,
   beforeMount () {
     // const id = this.$route.query.id
     // this.getDetail(id)
-    this.getTabData()
+    // this.getTabData()
 
-    this.getRecommend()
-    this.getHot()
+    // this.getRecommend()
+    // this.getHot()
   },
   methods: {
-    getDetail (id) {
-      const flagId = this.$route.query.flagId
-      const params = flagId ? { id, params: { flagId } } : { id }
-      getProductDetail(params).then(res => { // 加入购物车是需要的三条属性
-        console.log('from client request')
-        res.data.quantity = res.data.productMinimumPurchase
-        res.data.productPic = res.data.pic
-        res.data.productName = res.data.name
-        res.data.productPrice = res.data.price // 收藏需要的属性
-        this.productInfo = res.data
-        this.imgs = [] // 本页内跳转,先清空
-        if (this.productInfo.pic) {
-          this.imgs.push(this.productInfo.pic)
-        }
-        if (this.productInfo.albumPics === '' || this.productInfo.albumPics === null || this.productInfo.albumPics === undefined) {
-
-        } else if (this.productInfo.albumPics.includes(',')) {
-          this.productInfo.albumPics.split(',').map(v => {
-            this.imgs.push(v)
-          })
-        } else {
-          this.imgs.push(this.productInfo.albumPics)
-        }
-      }).catch(err => {
-        // console.log(err)
-        this.productInfo.publishStatus = 0
-      })
-    },
-    getTabData () {
-      //  获取右边tab
-      getAllCategory().then(res => {
-        this.tabList = res.data
-      })
-    },
-    getHot () { // 0 最新上架 1 热卖产品 2 推荐产品
-      getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
-        if (res.data.length > 7) {
-          this.hotList = res.data.slice(0, 7)
-        } else {
-          this.hotList = res.data
-        }
-      })
-    },
-    getRecommend () {
-      getProductInDictionary({ type: 2, recommendStatus: 1 }).then(res => {
-        for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
-          res.data[i].quantity = res.data[i].productMinimumPurchase || 1
-          res.data[i].productPic = res.data[i].pic
-        }
-        this.recommendList = formatArrToFitCarousel(res.data)
-      })
-    },
-    // 点击左侧tab分类
-    getTabItem (item) {
-      console.log(item, 123)
-    },
     // 点击收藏
     collect () {
       console.log('收藏状态', this.productInfo.collectStatus)
       // 如果收藏了图标改为collectIconActive
       if (!this.hasLogin) {
         this.$message.warning('请先登录')
-        this.$router.push('/login/loginIndex')
+        this.$router.push('/login')
         return
       }
       if (this.productInfo.productCollectStatus === 1) {
         this.productInfo.productCollectStatus = 0
-        productCollect(this.productInfo).then(res => {
+        this.$api.productCollect(this.productInfo).then(res => {
           this.$message({
             type: 'success',
             duration: 1000,
@@ -430,11 +376,11 @@ export default {
             duration: 1000,
             message: err
           })
-          this.getDetail(this.$route.query.id)
+          // this.getDetail(this.$route.query.id)
         })
       } else {
         this.productInfo.productCollectStatus = 1
-        productCollect(this.productInfo).then(res => {
+        this.$api.productCollect(this.productInfo).then(res => {
           this.$message({
             type: 'success',
             duration: 1000,
@@ -446,7 +392,7 @@ export default {
             duration: 1000,
             message: err
           })
-          this.getDetail(this.$route.query.id)
+          // this.getDetail(this.$route.query.id)
         })
       }
     },
@@ -468,13 +414,13 @@ export default {
     joinCar () {
       if (!this.hasLogin) {
         this.$message.warning('请先登录')
-        this.$router.push('/login/loginIndex')
+        this.$router.push('/login')
         return
       }
       if (this.$route.query.flagId !== undefined) {
         this.productInfo.recommendFlag = this.$route.query.flagId
       }
-      this.$store.dispatch('AddGood', this.productInfo).then(res => {
+      this.$store.dispatch('cart/AddGood', this.productInfo).then(res => {
         this.$message({
           type: 'success',
           duration: 1000,
@@ -493,7 +439,7 @@ export default {
       if (item.needStatistics) {
         item.recommendFlag = item.id
       }
-      this.$store.dispatch('AddGood', item).then(res => {
+      this.$store.dispatch('cart/AddGood', item).then(res => {
         this.$message({
           type: 'success',
           duration: 1000,
