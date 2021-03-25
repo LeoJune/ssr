@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/login'
+// import { login, logout, getInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 const defaultUserImg = require('@/assets/images/header-e.png')
 
@@ -24,12 +24,12 @@ export const mutations = {
   }
 }
 
-export const action = {
+export const actions = {
   // 登录
   Login ({ commit }, userInfo) {
     // const username = userInfo.username.trim()
     return new Promise((resolve, reject) => {
-      login(userInfo).then(response => {
+      this.$api.login(userInfo).then(response => {
         const data = response.data
         const tokenStr = data.tokenHead + data.token
         // if (userInfo.checked) {
@@ -40,6 +40,7 @@ export const action = {
         //   console.log('meigou zhihou')
         // }
         setToken(tokenStr)
+        console.log(getToken())
         commit('SET_TOKEN', tokenStr)
         resolve()
       }).catch(error => {
@@ -51,7 +52,7 @@ export const action = {
   // 获取用户信息
   GetInfo ({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getInfo().then(response => {
+      this.$api.getInfo().then(response => {
         const data = response.data
         commit('SET_USERNAME', data.username)
         commit('SET_AVATAR', data.icon || defaultUserImg)
@@ -66,7 +67,7 @@ export const action = {
   // 登出
   Logout ({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
+      this.$api.logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_USERNAME', '')
         commit('SET_HASLOGIN', false)
@@ -79,12 +80,12 @@ export const action = {
   },
 
   // 前端 登出
-  FedLogout ({ commit }) {
+  FedLogout ({ commit, dispatch }) {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       commit('SET_USERNAME', '')
       commit('SET_HASLOGIN', false)
-      this.$store.dispatch('ClearCart')
+      dispatch('cart/ClearCart', '', { root: true })
       removeToken()
       resolve()
     })

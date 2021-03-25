@@ -17,6 +17,7 @@ module.exports = {
   rules: {
     "vue/no-v-html": "off",
     "vue/html-indent": "off",
+    "vue/max-attributes-per-line": "off",
     "no-console": "off",
     'arrow-parens': 'off',
     "vue/html-self-closing": ["error", {
@@ -35,6 +36,7 @@ module.exports = {
       "ignoreWhenNoAttributes": true,
       "ignoreWhenEmpty": true,
       "ignores": ["div"]
-    }]
+    }],
+    "handle-callback-err": "off"
   }
 }

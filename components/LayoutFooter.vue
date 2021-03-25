@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { getAdInDictionary } from '@/api/dictionary'
+// import { getAdInDictionary } from '@/api/dictionary'
 import BackTop from '@/components/back-top/backTop.vue'
 export default {
   components: {
@@ -110,7 +110,7 @@ export default {
   },
   methods: {
     getList () {
-      getAdInDictionary({ type: 3, status: 1 }).then(res => {
+      this.$api.getAdInDictionary({ type: 3, status: 1 }).then(res => {
         this.friendLinkList = res.data
       })
     }

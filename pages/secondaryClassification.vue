@@ -80,7 +80,9 @@ export default {
       total: 501,
       pageSize: 5,
       classTitle: '',
-      classList: []
+      classList: [],
+      seoInfo: {},
+      defaultSeo: '维元动力商城'
     }
   },
   computed: {
@@ -94,7 +96,11 @@ export default {
       this.getData()
     }
   },
-  created () {
+  // created () {
+  //   this.getData()
+  //   this.getHot()
+  // },
+  beforeMount () {
     this.getData()
     this.getHot()
   },
@@ -175,7 +181,7 @@ export default {
     // 收藏
     collectStatusChange (value) {
       if (!this.hasLogin) {
-        this.$router.push('/login/loginIndex')
+        this.$router.push('/login')
       } else {
 
       }
@@ -228,6 +234,22 @@ export default {
     // 查看单个商品详情
     goDetail (item) {
       this.$router.push({ path: '/productDetail', query: { id: item.productId } })
+    }
+  },
+  head () {
+    return {
+      title: this.seoInfo.productSeo ? this.seoInfo.productSeo.seoTitle : this.defaultSeo,
+      meta: [
+        {
+          name: 'keywords',
+          content: this.seoInfo.productSeo ? this.seoInfo.productSeo.seoKeyword : this.defaultSeo
+        },
+        {
+          hid: 'description',
+          name: 'description',
+          content: this.seoInfo.productSeo ? this.seoInfo.productSeo.seoDesc : this.defaultSeo
+        }
+      ]
     }
   }
 }

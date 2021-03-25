@@ -196,66 +196,51 @@ import { mapGetters } from 'vuex'
 import { formatArrToFitCarousel } from '@/utils/validate'
 import SideTab from '@/components/side-tab/sideTab.vue'
 import Carousel from '@/components/carousel/carousel.vue'
+
+// const getData = (store, id, params) => {
+//   return new Promise((resolve, reject) => {
+//     store.dispatch('getProductDetail', id, params).then(res => {
+//       const productInfo = res.data
+//       resolve(productInfo)
+//     }).catch(err => {
+//       reject(err)
+//     })
+//   })
+// }
 export default {
   components: {
     SideTab,
     Carousel
   },
-  // metaInfo () {
-  //   const that = this
-  //   if (this.productInfo.productSeo === null || this.productInfo.productSeo === undefined || this.productInfo.publishStatus !== 1) {
-  //     return console.log('meiyouseo')
-  //   }
-  //   return {
-  //     title: this.productInfo.productSeo.seoTitle,
-  //     meta: [
-  //       { name: 'description', content: that.productInfo.productSeo.seoDesc },
-  //       { name: 'keywords', content: that.productInfo.productSeo.seoKeyword }
-  //     ]
-  //   }
-  // },
-  asyncData (context) {
-    const id = context.query.id
-    const flagId = context.query.flagId
-    const asyncData = {}
-    // const params = flagId ? { id, params: { flagId } } : { id }
-    return context.app.$axios.request('http://58.49.89.99:8056/product/info/' + id, {
-      method: 'GET',
-      params: { flagId }
-    }).then(response => {
-      console.log(response.data)
-      const res = response.data
-      console.log('from server request')
-      res.data.quantity = res.data.productMinimumPurchase
-      res.data.productPic = res.data.pic
-      res.data.productName = res.data.name
-      res.data.productPrice = res.data.price // 收藏需要的属性
-      asyncData.productInfo = res.data
-      asyncData.imgs = []
-      if (asyncData.productInfo.pic) {
-        asyncData.imgs.push(asyncData.productInfo.pic)
+  async asyncData ({ query, app }) {
+    const id = query.id
+    const flagId = query.flagId
+    console.log(id, flagId)
+    const params = flagId ? { id, params: { flagId } } : { id }
+    let imgs = []
+    const productInfo = await app.$api.getProductDetail(params).then(res => {
+      res.quantity = res.productMinimumPurchase
+      res.productPic = res.pic
+      res.productName = res.name
+      res.productPrice = res.price // 收藏需要的属性
+      imgs = []
+      if (res.pic) {
+        imgs.push(res.pic)
       }
-      if (asyncData.productInfo.albumPics === '' || asyncData.productInfo.albumPics === null || asyncData.productInfo.albumPics === undefined) {
-
-      } else if (asyncData.productInfo.albumPics.includes(',')) {
-        asyncData.productInfo.albumPics.split(',').map(v => {
-          asyncData.imgs.push(v)
+      if (res.albumPics && res.albumPics.includes(',')) {
+        res.albumPics.split(',').map(v => {
+          imgs.push(v)
         })
-      } else {
-        asyncData.imgs.push(asyncData.productInfo.albumPics)
+      } else if (res.albumPics) {
+        imgs.push(res.albumPics)
       }
-      return asyncData
+      return res
     }).catch(err => {
-      console.log(err + ' from catch err!!!!!!!!!!!!!!!!!!!!!')
+      console.log(err)
+      return { publishStatus: 0 }
     })
-    // return getProductDetail(params).then(res => {
-    //   res.data.quantity = res.data.productMinimumPurchase
-    //   res.data.productPic = res.data.pic
-    //   res.data.productName = res.data.name
-    //   res.data.productPrice = res.data.price // 收藏需要的属性
-    //   asyncData.productInfo = res.data
-    //   return asyncData
-    // })
+    console.log(productInfo)
+    return { productInfo, imgs }
   },
   data () {
     return {
@@ -389,6 +374,9 @@ export default {
         } else {
           this.imgs.push(this.productInfo.albumPics)
         }
+      }).catch(err => {
+        // console.log(err)
+        this.productInfo.publishStatus = 0
       })
     },
     getTabData () {
@@ -518,9 +506,11 @@ export default {
   },
   head () {
     return {
+      notShowBanner: true,
       title: this.productInfo.productSeo ? this.productInfo.productSeo.seoTitle : this.defaultSeo,
       meta: [
         {
+          hid: 'keywords',
           name: 'keywords',
           content: this.productInfo.productSeo ? this.productInfo.productSeo.seoKeyword : this.defaultSeo
         },

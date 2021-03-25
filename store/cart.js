@@ -1,4 +1,4 @@
-import { getProductInCart, addProduct, updateProductNum } from '@/api/cart'
+// import { getProductInCart, addProduct } from '@/api/cart'
 
 export const state = () => ({
   cartList: [],
@@ -25,25 +25,6 @@ export const mutations = {
     } else {
       state.cartList.push(product)
     }
-  },
-  DELETE_GOOD: (state, productArr) => {
-
-  },
-  NUM_INCREASE: (state, product) => {
-    // let myIndex = null
-    for (let i = 0; i < state.cartList.length; i++) {
-      if (state.cartList[i].id === product.id) {
-        // myIndex = i
-        state.cartList[i].id = product.quantity
-      }
-    }
-  },
-  NUM_CHANGE: (state, product) => {
-    for (let i = 0; i < state.cartList.length; i++) {
-      if (state.cartList[i].id === product.id) {
-        state.cartList[i].id = product.quantity
-      }
-    }
   }
 }
 export const actions = {
@@ -62,7 +43,7 @@ export const actions = {
   // 设置更新购物车
   GetCartInfo ({ commit, state }) {
     return new Promise((resolve, reject) => {
-      getProductInCart().then(res => {
+      this.$api.getProductInCart().then(res => {
         // console.log(res)
         commit('SET_CARTLIST', res.data)
         resolve(res.data)
@@ -73,18 +54,8 @@ export const actions = {
   },
   AddGood ({ commit }, product) {
     return new Promise((resolve, reject) => {
-      addProduct(product).then(res => {
+      this.$api.addProduct(product).then(res => {
         commit('ADD_GOOD', product)
-        resolve(res)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  NumChange ({ commit }, product) {
-    return new Promise((resolve, reject) => {
-      updateProductNum({ id: product.id, quantity: product.quantity }).then(res => {
-        commit('NUM_CHANGE', product)
         resolve(res)
       }).catch(error => {
         reject(error)

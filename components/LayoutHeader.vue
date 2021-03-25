@@ -41,9 +41,7 @@
           <div @click="toCart">
             购物车
             <span>
-              (
-              {{ cartList.length }}
-              )
+              ({{ cartList.length }})
             </span>
           </div>
         </div>
@@ -216,14 +214,17 @@
 </template>
 
 <script>
-import { getBrandList, getAllCategory, getRecommdNavAndHome, search } from '@/api/header'
-import { getAdInDictionary } from '@/api/dictionary'
+// import { getBrandList, getAllCategory, getRecommdNavAndHome, search } from '@/api/header'
+// import { getAdInDictionary } from '@/api/dictionary'
 import { login } from '@/api/login'
 import { mapGetters } from 'vuex'
 export default {
-  // prop: {
-  //   isShowBanner: Boolean
-  // },
+  props: {
+    isShowBanner: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
       dialogVisible: false,
@@ -236,7 +237,6 @@ export default {
       },
       searchKeyword: '',
       timout: null,
-      isShowBanner: true,
       nowShow: null,
       brandShow: false,
       bannerList: [
@@ -256,6 +256,15 @@ export default {
       'hasLogin',
       'cartList'
     ])
+    // avatar () {
+    //   return this.$store.state.avatar
+    // },
+    // hasLogin () {
+    //   return this.$store.state.hasLogin
+    // },
+    // cartList () {
+    //   return this.$store.state.cartList
+    // }
   },
   // created () {
   //   if (!this.$route.meta.notShowBanner) {
@@ -269,31 +278,33 @@ export default {
   //   this.getRecommdNavAndHome()
   // },
   beforeMount () {
-    if (!this.$route.meta.notShowBanner) {
-      this.isShowBanner = true
-    } else {
-      this.isShowBanner = false
+    // if (!this.$route.meta.notShowBanner) {
+    //   this.isShowBanner = true
+    // } else {
+    //   this.isShowBanner = false
+    // }
+    if (this.isShowBanner) {
+      this.getBanner()
+      this.getBrandList()
+      this.getAllCategory()
+      this.getRecommdNavAndHome()
     }
-    this.getBanner()
-    this.getBrandList()
-    this.getAllCategory()
-    this.getRecommdNavAndHome()
   },
   methods: {
     getBanner () { // 1 PC端首页 2 合作厂家 3 友情链接 4 移动端首页
-      getAdInDictionary({ type: 1, status: 1 }).then(res => {
+      this.$api.getAdInDictionary({ type: 1, status: 1 }).then(res => {
         // this.bannerList = formatArrToFitCarousel(res.data)
         this.bannerList = res.data
       })
     },
     getBrandList () {
-      getBrandList({ typeCode: 'productbrand', pageSize: 100, pageNum: 1 }).then(res => {
+      this.$api.getBrandList({ typeCode: 'productbrand', pageSize: 100, pageNum: 1 }).then(res => {
         // console.log('getbrandlist chengzgong')
         this.brandList = res.data.records
       })
     },
     getAllCategory () {
-      getAllCategory().then(res => {
+      this.$api.getAllCategory().then(res => {
         if (res.data.length > 7) {
           this.navList = res.data.slice(0, 7)
         } else {
@@ -302,7 +313,7 @@ export default {
       })
     },
     getRecommdNavAndHome () {
-      getRecommdNavAndHome({ navStatus: 1 }).then(res => {
+      this.$api.getRecommdNavAndHome({ navStatus: 1 }).then(res => {
         this.tipList = res.data
       })
     },
@@ -335,16 +346,16 @@ export default {
       this.$router.push('/login')
     },
     handleForget () {
-      this.$router.push('/login/forgetPassword')
+      this.$router.push('/forgetPassword')
     },
     toRegister () {
-      this.$router.push('/login/register')
+      this.$router.push('/register')
     },
     toUserInfo () {
       this.$router.push('/userInfo')
     },
     logout () {
-      this.$store.dispatch('FedLogout')
+      this.$store.dispatch('user/FedLogout')
     },
     listWidth (item) {
       if (!item.children) {
@@ -368,7 +379,7 @@ export default {
     querySearchAsync (queryString, cb) {
       let list = null
       const filterQueryString = queryString.replace(/[[\]]/g, '')
-      search({ productNameOrSn: filterQueryString, pageSize: 10, pageNum: 1 }).then(res => {
+      this.$api.search({ productNameOrSn: filterQueryString, pageSize: 10, pageNum: 1 }).then(res => {
         for (const i of res.data.records) {
           i.value = i.name
         }

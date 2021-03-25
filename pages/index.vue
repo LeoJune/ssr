@@ -127,9 +127,7 @@
 <script>
 // import store from '@/store'
 import { mapGetters } from 'vuex'
-import { getRecomendHomeList } from '@/api/product'
-import { getProductInDictionary, getAdInDictionary } from '@/api/dictionary'
-import { formatArrToFitCarousel } from '@/utils/validate'
+import { formatArrToFitCarousel, formatCorperate } from '@/utils/validate'
 import Carousel from '@/components/carousel/carousel.vue'
 import CarouselSmall from '@/components/carousel/carouselSmall.vue'
 
@@ -137,6 +135,51 @@ export default {
   components: {
     Carousel,
     CarouselSmall
+  },
+  async asyncData ({ app }) {
+    // 0 最新上架 1 热卖产品 2 推荐产品
+    let newList = [] // 最新上架
+    let homeLists = [] // 推荐商品（最多三栏的那个）
+    let hotList = [] // 热卖商品
+    let smallList = [] // 合作伙伴
+    await app.$api.getProductInDictionary({ type: 0, recommendStatus: 1 }).then(res => {
+      for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
+        res.data[i].quantity = res.data[i].productMinimumPurchase || 1
+        res.data[i].productPic = res.data[i].pic
+      }
+      newList = formatArrToFitCarousel(res.data)
+    })
+    await app.$api.getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
+      for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
+        res.data[i].quantity = res.data[i].productMinimumPurchase || 1
+        res.data[i].productPic = res.data[i].pic
+      }
+      if (res.data.length > 7) {
+        hotList = res.data.slice(0, 7)
+      } else {
+        hotList = res.data
+      }
+    })
+    await app.$api.getRecomendHomeList({ type: 0, recommendStatus: 1 }).then(res => {
+      for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
+        if (res.data[i].recommendProductList && res.data[i].recommendProductList.length !== 0) {
+          for (let j = 0; j < res.data[i].recommendProductList.length; j++) {
+            res.data[i].recommendProductList[j].quantity = res.data[i].recommendProductList[j].productMinimumPurchase || 1
+            res.data[i].recommendProductList[j].productPic = res.data[i].recommendProductList[j].pic
+            // 只有这个没有productName
+            res.data[i].recommendProductList[j].productName = res.data[i].recommendProductList[j].name
+          }
+        }
+        // res.data[i].quantity = res.data.productMinimumPurchase || 1
+        // res.data[i].productPic = res.data.pic
+      }
+      homeLists = res.data
+    })
+    await app.$api.getAdInDictionary({ type: 2, status: 1 }).then(res => {
+      // this.bannerList = formatArrToFitCarousel(res.data)
+      smallList = formatCorperate(res.data, 4)
+    })
+    return { newList, homeLists, hotList, smallList }
   },
   data () {
     return {
@@ -171,79 +214,21 @@ export default {
       'hasLogin'
     ])
   },
-  created () {
-    this.getRecomendHomeList()
-    this.getLatestNew()
-    this.getHot()
-    this.getCorporate()
+  // created () {
+  //   this.getRecomendHomeList()
+  //   this.getLatestNew()
+  //   this.getHot()
+  //   this.getCorporate()
+  // },
+  beforeMount () {
+    // this.getRecomendHomeList()
+    // this.getLatestNew()
+    // this.getHot()
+    // this.getCorporate()
   },
   methods: {
-    format (arr, num) { // 三个一组或四个一组
-      if (!arr || arr.length === 0) {
-        // console.log('return kong')
-        return []
-      }
-      const formatArr = []
-      let temp = []
-      let count = 0
-      for (let i = 0; i < arr.length; i++) {
-        temp.push(arr[i])
-        count++
-        if (count === num) {
-          formatArr.push(temp)
-          count = 0
-          temp = []
-        } else if (i === arr.length - 1) {
-          formatArr.push(temp)
-        }
-      }
-      return formatArr
-      // formatArrToFitCarousel(arr)
-    },
-    getRecomendHomeList () {
-      getRecomendHomeList().then(res => {
-        for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
-          if (res.data[i].recommendProductList && res.data[i].recommendProductList.length !== 0) {
-            for (let j = 0; j < res.data[i].recommendProductList.length; j++) {
-              res.data[i].recommendProductList[j].quantity = res.data[i].recommendProductList[j].productMinimumPurchase || 1
-              res.data[i].recommendProductList[j].productPic = res.data[i].recommendProductList[j].pic
-              // 只有这个没有productName
-              res.data[i].recommendProductList[j].productName = res.data[i].recommendProductList[j].name
-            }
-          }
-          // res.data[i].quantity = res.data.productMinimumPurchase || 1
-          // res.data[i].productPic = res.data.pic
-        }
-        this.homeLists = res.data
-      })
-    },
-    getLatestNew () { // 0 最新上架 1 热卖产品 2 推荐产品
-      getProductInDictionary({ type: 0, recommendStatus: 1 }).then(res => {
-        for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
-          res.data[i].quantity = res.data[i].productMinimumPurchase || 1
-          res.data[i].productPic = res.data[i].pic
-        }
-        this.newList = formatArrToFitCarousel(res.data)
-      })
-    },
-    getHot () { // 0 最新上架 1 热卖产品 2 推荐产品
-      getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
-        for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
-          res.data[i].quantity = res.data[i].productMinimumPurchase || 1
-          res.data[i].productPic = res.data[i].pic
-        }
-        if (res.data.length > 7) {
-          this.hotList = res.data.slice(0, 7)
-        } else {
-          this.hotList = res.data
-        }
-      })
-    },
-    getCorporate () { // 1 PC端首页 2 合作厂家 3 友情链接 4 移动端首页
-      getAdInDictionary({ type: 2, status: 1 }).then(res => {
-        // this.bannerList = formatArrToFitCarousel(res.data)
-        this.smallList = this.format(res.data, 4)
-      })
+    format (arr, num) {
+      return formatCorperate(arr, num)
     },
     joinCart (item, needStatistics) {
       if (!this.hasLogin) {
@@ -272,6 +257,24 @@ export default {
     },
     toAboutUs () {
       this.$router.push('/companyProfile')
+    }
+  },
+  head () {
+    return {
+      notShowBanner: true,
+      title: '维元动力商城',
+      meta: [
+        {
+          hid: 'keywords',
+          name: 'keywords',
+          content: '维元动力商城'
+        },
+        {
+          hid: 'description',
+          name: 'description',
+          content: '维元动力商城'
+        }
+      ]
     }
   }
 }

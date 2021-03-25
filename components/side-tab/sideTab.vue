@@ -1,34 +1,34 @@
 <template>
   <div class="secondary-left">
     <ul class="secondary-left-tab">
-      <li
+      <nuxt-link
         v-for="(item, index) in tabList"
         :key="index"
-        :class="{
-          'li-active': activeTab == item.id || activeTab == item.itemId,
-        }"
-        @click="toJump(item)"
+        :to="{ path: '/secondaryClassification', query: { id: item.id, name: item.name } }"
       >
-        {{ item.name || item.itemName }}
-      </li>
+        <li :class="{'li-active': activeTab == item.id || activeTab == item.itemId,}">
+          {{ item.name || item.itemName }}
+        </li>
+      </nuxt-link>
     </ul>
     <div class="secondary-left-hot">
       <div class="secondary-left-hot-title">全部热销商品</div>
-      <div
+      <nuxt-link
         v-for="(item, index) in hotList"
         :key="index"
-        class="secondary-left-hot-item"
-        @click="toDetail(item)"
+        :to="{ path: '/productDetail', query: { id: item.productId, flagId: item.id } }"
       >
-        <div class="item-img">
-          <img
-            :src="item.pic || item.defaultProductImg"
-            alt
-          />
+        <div class="secondary-left-hot-item">
+          <div class="item-img">
+            <img
+              :src="item.pic || item.defaultProductImg"
+              :alt="item.productName"
+            />
+          </div>
+          <div class="item-name">{{ item.productName }}</div>
+          <div class="item-price">单价：￥{{ item.price }}</div>
         </div>
-        <div class="item-name">{{ item.productName }}</div>
-        <div class="item-price">单价：￥{{ item.price }}</div>
-      </div>
+      </nuxt-link>
     </div>
   </div>
 </template>
@@ -87,14 +87,26 @@ export default {
       padding: 0 0 0 45px;
       color: #666;
       cursor: pointer;
-      &:first-child {
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
-      }
-      &:last-child {
-        border: none;
-        border-bottom-left-radius: 4px;
-        border-bottom-right-radius: 4px;
+      // &:first-child {
+      //   border-top-left-radius: 4px;
+      //   border-top-right-radius: 4px;
+      // }
+      // &:last-child {
+      //   border: none;
+      //   border-bottom-left-radius: 4px;
+      //   border-bottom-right-radius: 4px;
+      // }
+    }
+    a:first-child {
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+    a:last-child {
+      border: none;
+      border-bottom-left-radius: 4px;
+      border-bottom-right-radius: 4px;
+      li {
+        border-bottom: none;
       }
     }
     .li-active {
@@ -144,6 +156,7 @@ export default {
         font-size: 18px;
         font-weight: 500;
         // margin-top: -10px;
+        color: #333;
         margin-bottom: 12px;
         display: -webkit-box;
         overflow: hidden;

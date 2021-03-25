@@ -90,3 +90,26 @@ export function formatArrToFitCarousel (arr) {
   }
   return formatArr
 }
+
+export function formatCorperate (arr, num) {
+  if (!arr || arr.length === 0) {
+    // console.log('return kong')
+    return []
+  }
+  const formatArr = []
+  let temp = []
+  let count = 0
+  for (let i = 0; i < arr.length; i++) {
+    temp.push(arr[i])
+    count++
+    if (count === num) {
+      formatArr.push(temp)
+      count = 0
+      temp = []
+    } else if (i === arr.length - 1) {
+      formatArr.push(temp)
+    }
+  }
+  return formatArr
+  // formatArrToFitCarousel(arr)
+}

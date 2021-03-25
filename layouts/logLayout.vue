@@ -1,7 +1,7 @@
 <template>
   <div class="layout">
-    <LayoutHeader />
-    <div class="core">
+    <LayoutHeader :isShowBanner="false" />
+    <div class="loginBackground">
       <nuxt />
     </div>
     <LayoutFooter />
@@ -14,7 +14,6 @@ export default {
 
 <style lang='less'>
 @import "@/assets/font/font.css";
-@import "nprogress/nprogress.css"; // 进度条样式
 
 html {
   font-family: Microsoft YaHei !important;
@@ -27,21 +26,10 @@ body {
   width: 100%;
   overflow-x: hidden;
 }
-.core {
-  width: 1280px;
-  margin: 0 auto;
-}
-.borderBox {
-  box-sizing: border-box;
-}
-.angle {
-  width: 18px;
-  height: 10px;
-}
-.price-color {
-  color: #e73b57;
-}
-.normal-blue {
-  color: #0093e6;
+.loginBackground {
+  width: 100%;
+  background-color: #eeeeee;
+  padding-top: 52px;
+  padding-bottom: 52px;
 }
 </style>

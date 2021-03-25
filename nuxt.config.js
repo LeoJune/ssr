@@ -18,11 +18,11 @@ export default {
   ** See https://nuxtjs.org/api/configuration-head
   */
   head: {
-    title: process.env.npm_package_name || '',
+    title: '维元动力商城' || '',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: process.env.npm_package_description || '' }
+      { hid: 'description', name: 'description', content: '维元动力是一家专业动力设备提供商' || '' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -40,7 +40,11 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '@/plugins/permission',
+    '@/plugins/request',
+    '@/plugins/api'
+    // { src: '@/plugins/permission', mode: 'client' }
     // { src: '@/plugins/axios', mode: 'server' }
   ],
   /*
@@ -96,5 +100,6 @@ export default {
   build: {
     // additionalExtensions: ["jsx"],
     transpile: [/^element-ui/]
-  }
+  },
+  loading: true
 }
