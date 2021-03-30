@@ -51,8 +51,8 @@
 <script>
 // import store from '@/store'
 import { mapGetters } from 'vuex'
-import { getBrother, getChild, getProductByCategory } from '@/api/secondClass'
-import { getProductInDictionary } from '@/api/product'
+// import { getBrother, getChild, getProductByCategory } from '@/api/secondClass'
+// import { getProductInDictionary } from '@/api/product'
 import SideTab from '@/components/side-tab/sideTab.vue'
 import comProductList from '@/components/product-list/comProductList.vue'
 const defaultListquery = {
@@ -68,12 +68,64 @@ export default {
     SideTab,
     comProductList
   },
+  async asyncData ({ app, query }) {
+    const name = query.name
+    const id = query.id
+    delete defaultListquery.productCategoryId
+    const listQuery = Object.assign({ productCategoryId: id }, defaultListquery)
+    console.log(listQuery)
+    const nowTab = id
+    let tabList = [] // 左边的分类tab
+    let hotList = [] // 热卖商品
+    let commodityList = [] // 列表商品
+    let classList = [] // 下级分类
+    const classTitle = name
+    let hasChild = false
+    let total = 0
+    const seoInfo = {}
+
+    await app.$api.getProductByCategory(listQuery).then(res => {
+      for (let i = 0; i < res.data.records.length; i++) { // 加入购物车需要的两个属性
+        res.data.records[i].quantity = res.data.records[i].productMinimumPurchase || 1
+        res.data.records[i].productPic = res.data.records[i].pic
+        res.data.records[i].productName = res.data.records[i].name
+
+        res.data.records[i].productPrice = res.data.records[i].price // 收藏需要的属性
+      }
+      commodityList = res.data.records
+      total = res.data.total
+    })
+    await app.$api.getBrother(id).then(res => {
+      tabList = res.data
+    })
+    await app.$api.getChild(id, { pageSize: 100, pageNum: 1 }).then(res => {
+      classList = res.data.list
+      if (res.data.list.length === 0) {
+        hasChild = false
+      } else {
+        hasChild = true
+      }
+    }).catch(error => {
+      console.log(error)
+      hasChild = false
+    })
+    await app.$api.getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
+      if (res.data.length > 7) {
+        hotList = res.data.slice(0, 7)
+      } else {
+        hotList = res.data
+      }
+    })
+
+    return { nowTab, tabList, hotList, commodityList, classTitle, classList, hasChild, total, seoInfo, listQuery }
+  },
   data () {
     return {
       nowTab: '0',
       hasChild: false,
       listLoading: false,
-      listQuery: Object.assign({}, defaultListquery),
+      // listQuery: {Object.assign({}, defaultListquery)},
+      listQuery: {},
       tabList: [],
       hotList: [],
       commodityList: [],
@@ -90,56 +142,25 @@ export default {
       'hasLogin'
     ])
   },
-  watch: {
-    $route () {
-      // console.log('luyoubianhual')
-      this.getData()
-    }
-  },
+  watchQuery: true,
+  // watch: {
+  //   $route () {
+  //     // console.log('luyoubianhual')
+  //     this.getData()
+  //   }
+  // },
   // created () {
   //   this.getData()
   //   this.getHot()
   // },
   beforeMount () {
-    this.getData()
-    this.getHot()
+    // this.getData()
+    // this.getHot()
   },
   methods: {
-    getData () {
-      const name = this.$route.query.name
-      const id = this.$route.query.id
-
-      this.listQuery.productCategoryId = id
-
-      this.classTitle = name
-      this.nowTab = id
-      this.getBrother(id)
-      this.getChild(id)
-
-      this.listQuery.pageNum = 1
-      this.getListData()
-    },
-    getBrother (id) {
-      getBrother(id).then(res => {
-        this.tabList = res.data
-      })
-    },
-    getChild (id) {
-      getChild(id, { pageSize: 100, pageNum: 1 }).then(res => {
-        this.classList = res.data.list
-        if (res.data.list.length === 0) {
-          this.hasChild = false
-        } else {
-          this.hasChild = true
-        }
-      }).catch(error => {
-        console.log(error)
-        this.hasChild = false
-      })
-    },
     getListData () {
       this.listLoading = true
-      getProductByCategory(this.listQuery).then(res => {
+      this.$api.getProductByCategory(this.listQuery).then(res => {
         for (let i = 0; i < res.data.records.length; i++) { // 加入购物车需要的两个属性
           res.data.records[i].quantity = res.data.records[i].productMinimumPurchase || 1
           res.data.records[i].productPic = res.data.records[i].pic
@@ -156,15 +177,6 @@ export default {
     getTabItem (item) {
       console.log(item, 123)
       this.classTitle = item.name
-    },
-    getHot () { // 0 最新上架 1 热卖产品 2 推荐产品
-      getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
-        if (res.data.length > 7) {
-          this.hotList = res.data.slice(0, 7)
-        } else {
-          this.hotList = res.data
-        }
-      })
     },
     // 排序
     sortChange (i) {
@@ -221,7 +233,7 @@ export default {
       this.$router.push({ path: '/productList', query: { id: item.id } })
     },
     checkChild (item) {
-      getChild(item.id).then(res => {
+      this.$api.getChild(item.id).then(res => {
         if (res.data.list.length === 0) {
           this.$router.push({ path: '/productList', query: { id: item.id } })
         } else {

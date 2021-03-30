@@ -12,7 +12,7 @@ export default ({ $axios, store, redirect }, inject) => {
   }
   const request = $axios.create({
     baseURL,
-    timeout: 15000
+    timeout: 2000
   })
 
   // request拦截器

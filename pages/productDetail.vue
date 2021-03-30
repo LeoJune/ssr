@@ -242,7 +242,7 @@ export default {
         hotList = res.data
       }
     })
-    await app.$api.getAllCategory({ type: 2, recommendStatus: 1 }).then(res => {
+    await app.$api.getProductInDictionary({ type: 2, recommendStatus: 1 }).then(res => {
       for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
         res.data[i].quantity = res.data[i].productMinimumPurchase || 1
         res.data[i].productPic = res.data[i].pic

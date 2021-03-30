@@ -21,10 +21,10 @@ export default ({ app: { $request } }, inject) => {
       })
     },
     // -----------------------------------
-    // seo信息获取 就是后台系统设置的接口，里面有很多用不上的信息
-    getSeoConfig () {
+    // seo信息获取 就是后台系统设置的接口
+    getDefaultSeoConfig () {
       return $request({
-        url: '/systemsetting/getSysConf',
+        url: '/systemsetting/default',
         method: 'get'
       })
     },
@@ -158,7 +158,40 @@ export default ({ app: { $request } }, inject) => {
       })
     },
     // -----------------------------------
-    // 商品相关
+    // 商品分类
+    // 获取分类商品
+    getProductByCategory (params) {
+      return $request({
+        url: 'product/list',
+        method: 'get',
+        params
+      })
+    },
+    // 获取同级分类
+    getBrother (id) {
+      return $request({
+        url: '/productCategory/brotherList/' + id,
+        method: 'get'
+      })
+    },
+    // 获取下级分类
+    getChild (id, params) {
+      return $request({
+        url: 'productCategory/childListSelfPage/' + id,
+        method: 'get',
+        params
+      })
+    },
+    // 通过关键词搜索商品
+    getProduct (params) { // 获取商品,自由度较高,目前用在搜索
+      return $request({
+        url: '/product/list',
+        method: 'get',
+        params
+      })
+    },
+    // -----------------------------------
+    // 商品相关/商品详情
     // id查商品详情
     getProductDetail ({ id, params }) {
       return $request({

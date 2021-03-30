@@ -101,5 +101,8 @@ export default {
     // additionalExtensions: ["jsx"],
     transpile: [/^element-ui/]
   },
-  loading: true
+  loading: {
+    color: '#1487d5',
+    height: '3px'
+  }
 }

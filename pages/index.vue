@@ -142,6 +142,7 @@ export default {
     let homeLists = [] // 推荐商品（最多三栏的那个）
     let hotList = [] // 热卖商品
     let smallList = [] // 合作伙伴
+    const seoInfo = {}
     await app.$api.getProductInDictionary({ type: 0, recommendStatus: 1 }).then(res => {
       for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
         res.data[i].quantity = res.data[i].productMinimumPurchase || 1
@@ -179,7 +180,10 @@ export default {
       // this.bannerList = formatArrToFitCarousel(res.data)
       smallList = formatCorperate(res.data, 4)
     })
-    return { newList, homeLists, hotList, smallList }
+    // await app.$api.getDefaultSeoConfig().then(res => {
+    //   seoInfo = res.data
+    // })
+    return { newList, homeLists, hotList, smallList, seoInfo }
   },
   data () {
     return {
@@ -206,7 +210,8 @@ export default {
           require('../assets/images/home-right-small2.png'),
           require('../assets/images/home-right-small2.png')
         ]
-      ]
+      ],
+      seoInfo: {}
     }
   },
   computed: {
@@ -225,6 +230,9 @@ export default {
     // this.getLatestNew()
     // this.getHot()
     // this.getCorporate()
+    // this.$api.getDefaultSeoConfig().then(res => {
+    //   console.log(res.data)
+    // })
   },
   methods: {
     format (arr, num) {
@@ -262,7 +270,6 @@ export default {
   },
   head () {
     return {
-      notShowBanner: true,
       title: '维元动力商城',
       meta: [
         {

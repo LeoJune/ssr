@@ -25,8 +25,8 @@
 <script>
 // import store from '@/store'
 import { mapGetters } from 'vuex'
-import { getProduct, getProductInDictionary } from '@/api/product'
-import { getAllCategory } from '@/api/header'
+// import { getProduct, getProductInDictionary } from '@/api/product'
+// import { getAllCategory } from '@/api/header'
 import SideTab from '@/components/side-tab/sideTab.vue'
 import comProductList from '@/components/product-list/comProductList.vue'
 
@@ -43,6 +43,39 @@ export default {
     SideTab,
     comProductList
   },
+  async asyncData ({ query, app }) {
+    const keyword = query.searchKeyword
+    let tabList = []
+    let hotList = []
+    let commodityList = []
+    let total = 0
+    delete defaultListquery.productNameOrSn
+    const listQuery = Object.assign({ productNameOrSn: keyword }, defaultListquery)
+
+    await app.$api.getAllCategory().then(res => {
+      tabList = res.data
+    })
+
+    await app.$api.getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
+      if (res.data.length > 7) {
+        hotList = res.data.slice(0, 7)
+      } else {
+        hotList = res.data
+      }
+    })
+    await app.$api.getProduct(listQuery).then(res => {
+      for (let i = 0; i < res.data.records.length; i++) { // 加入购物车需要的两个属性
+        res.data.records[i].quantity = res.data.records[i].productMinimumPurchase || 1
+        res.data.records[i].productPic = res.data.records[i].pic
+        res.data.records[i].productName = res.data.records[i].name
+
+        res.data.records[i].productPrice = res.data.records[i].price // 收藏需要的属性
+      }
+      commodityList = res.data.records
+      total = res.data.total
+    })
+    return { tabList, hotList, commodityList, total, listQuery }
+  },
   data () {
     return {
       id: null,
@@ -52,7 +85,8 @@ export default {
       commodityList: [],
       total: 501,
       pageSize: 8,
-      listQuery: Object.assign({}, defaultListquery)
+      // listQuery: Object.assign({}, defaultListquery)
+      listQuery: {}
     }
   },
   computed: {
@@ -60,35 +94,36 @@ export default {
       'hasLogin'
     ])
   },
-  watch: {
-    $route () {
-      this.listQuery = Object.assign({}, defaultListquery)
-      this.getAllData()
-    }
-  },
-  created () {
-    this.getAllData()
-    this.getHot()
-  },
+  watchQuery: true,
+  // watch: {
+  //   $route () {
+  //     this.listQuery = Object.assign({}, defaultListquery)
+  //     this.getAllData()
+  //   }
+  // },
+  // created () {
+  //   this.getAllData()
+  //   this.getHot()
+  // },
   methods: {
-    getAllData () {
-      this.listQuery.productNameOrSn = this.$route.query.searchKeyword
+    // getAllData () {
+    //   this.listQuery.productNameOrSn = this.$route.query.searchKeyword
 
-      this.getTabData() // 获取tab
+    //   this.getTabData() // 获取tab
 
-      this.listQuery.pageNum = 1 //  在getList之前都要把页数复原,只有在动页数的时候才不是1,动页数的时候再直接指定确切数字
+    //   this.listQuery.pageNum = 1 //  在getList之前都要把页数复原,只有在动页数的时候才不是1,动页数的时候再直接指定确切数字
 
-      this.getListData() // 获取通过搜索获取list(从不和品牌,分类组成组合搜索)
-    },
-    getTabData () {
-      //  获取右边tab
-      getAllCategory().then(res => {
-        this.tabList = res.data
-      })
-    },
+    //   this.getListData() // 获取通过搜索获取list(从不和品牌,分类组成组合搜索)
+    // },
+    // getTabData () {
+    //   //  获取右边tab
+    //   getAllCategory().then(res => {
+    //     this.tabList = res.data
+    //   })
+    // },
     getListData () {
       //  获取商品
-      getProduct(this.listQuery).then(res => {
+      this.$api.getProduct(this.listQuery).then(res => {
         for (let i = 0; i < res.data.records.length; i++) { // 加入购物车需要的两个属性
           res.data.records[i].quantity = res.data.records[i].productMinimumPurchase || 1
           res.data.records[i].productPic = res.data.records[i].pic
@@ -104,15 +139,15 @@ export default {
     getTabItem (item) {
       console.log(item, 123)
     },
-    getHot () { // 0 最新上架 1 热卖产品 2 推荐产品
-      getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
-        if (res.data.length > 7) {
-          this.hotList = res.data.slice(0, 7)
-        } else {
-          this.hotList = res.data
-        }
-      })
-    },
+    // getHot () { // 0 最新上架 1 热卖产品 2 推荐产品
+    //   getProductInDictionary({ type: 1, recommendStatus: 1 }).then(res => {
+    //     if (res.data.length > 7) {
+    //       this.hotList = res.data.slice(0, 7)
+    //     } else {
+    //       this.hotList = res.data
+    //     }
+    //   })
+    // },
     // 排序
     sortChange (i) {
       console.log('paixu' + i)

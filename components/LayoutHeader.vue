@@ -108,13 +108,16 @@
             v-show="brandShow"
             class="brandlist"
           >
-            <p
+            <nuxt-link
               v-for="(item, index) in brandList"
               :key="index"
-              @click="toProductList(item)"
+              :to="{ path: '/productList', query: { id: item.itemId, brandTab: true } }"
             >
-              {{ item.itemName }}
-            </p>
+              <p>
+                {{ item.itemName }}
+              </p>
+              <!-- @click="toProductList(item)" -->
+            </nuxt-link>
           </div>
         </div>
         <div class="category-wrap">
@@ -125,26 +128,29 @@
             @mouseenter="changeNowShow(index)"
             @mouseleave="resetNowShow"
           >
-            <div
-              class="out"
-              @click="toSecondClassFication(item)"
-            >
-              <span>{{ item.name }}</span>
-              <img
-                src="@/assets/images/header-nav-item.png"
-                class="angle"
-              />
-            </div>
+            <nuxt-link :to="{ path: '/secondaryClassification', query: { id: item.id, name: item.name } }">
+              <div class="out">
+                <!-- @click="toSecondClassFication(item)" -->
+                <span>{{ item.name }}</span>
+                <img
+                  src="@/assets/images/header-nav-item.png"
+                  class="angle"
+                />
+              </div>
+            </nuxt-link>
             <div
               v-show="insideShow(index)"
               class="inside"
               :style="'width:' + listWidth(item) + 'px'"
             >
-              <span
+              <nuxt-link
                 v-for="(child, jIndex) in item.children"
                 :key="jIndex"
-                @click="toSecondClassFication(child)"
-              >{{ child.name }}</span>
+                :to="{ path: '/secondaryClassification', query: { id: child.id, name: child.name } }"
+              >
+                <span>{{ child.name }}</span>
+                <!-- @click="toSecondClassFication(child)" -->
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -159,57 +165,6 @@
         >{{ item.name }}</span>
       </div>
     </div>
-    <el-dialog
-      title="用户登陆"
-      :visible.sync="dialogVisible"
-      width="40%"
-    >
-      <el-form
-        ref="loginForm"
-        :model="loginForm"
-        :rules="rules"
-        labelWidth="150px"
-        size="small"
-      >
-        <el-form-item
-          label="用户名："
-          prop="username"
-        >
-          <el-input
-            v-model="loginForm.username"
-            type="text"
-            style="width: 250px"
-            maxlength="30"
-          ></el-input>
-        </el-form-item>
-        <el-form-item
-          label="密 码："
-          prop="password"
-        >
-          <el-input
-            v-model="loginForm.password"
-            type="password"
-            style="width: 250px"
-            maxlength="16"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <span
-        slot="footer"
-        class="dialog-footer"
-        style="text-align: center"
-      >
-        <el-button
-          size="small"
-          @click="handleForget"
-        >忘记密码</el-button>
-        <el-button
-          type="primary"
-          size="small"
-          @click="toLogin"
-        >登 陆</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -225,6 +180,12 @@ export default {
       default: true
     }
   },
+  // async fetch ({ app, store }) {
+  //   console.log('from fetch')
+  //   this.bannerList = await app.$api.getAdInDictionary({ type: 1, status: 1 }).then(res => {
+  //     return res.data
+  //   })
+  // },
   data () {
     return {
       dialogVisible: false,
@@ -236,7 +197,6 @@ export default {
         username: [{ reuqired: true, trigger: 'blur', message: '请填入用户名' }]
       },
       searchKeyword: '',
-      timout: null,
       nowShow: null,
       brandShow: false,
       bannerList: [
@@ -246,7 +206,6 @@ export default {
       navList: [], //  导航栏
       tipList: [], //  导航栏推荐
       brandList: [],
-      navMore: [], //  导航栏二级
       notLoginImg: require('@/assets/images/header-login.png')
     }
   },
@@ -256,33 +215,17 @@ export default {
       'hasLogin',
       'cartList'
     ])
-    // avatar () {
-    //   return this.$store.state.avatar
-    // },
-    // hasLogin () {
-    //   return this.$store.state.hasLogin
-    // },
-    // cartList () {
-    //   return this.$store.state.cartList
-    // }
+    // 'bannerList',
+    // 'brandList',
+    //   'navList',
+    //   'tipList'
   },
-  // created () {
-  //   if (!this.$route.meta.notShowBanner) {
-  //     this.isShowBanner = true
-  //   } else {
-  //     this.isShowBanner = false
-  //   }
-  //   this.getBanner()
-  //   this.getBrandList()
-  //   this.getAllCategory()
-  //   this.getRecommdNavAndHome()
-  // },
   beforeMount () {
-    // if (!this.$route.meta.notShowBanner) {
-    //   this.isShowBanner = true
-    // } else {
-    //   this.isShowBanner = false
-    // }
+    if (!this.$route.meta.notShowBanner) {
+      this.isShowBanner = true
+    } else {
+      this.isShowBanner = false
+    }
     if (this.isShowBanner) {
       this.getBanner()
       this.getBrandList()
@@ -616,6 +559,7 @@ export default {
         background-color: #1487d5;
         position: relative;
         font-size: 18px;
+        color: #fff !important;
         .out {
           display: flex;
           width: 100%;
@@ -623,6 +567,14 @@ export default {
           justify-content: center;
           align-items: center;
           cursor: pointer;
+          span {
+            color: #fff;
+            max-width: 130px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
           .angle {
             margin-left: 5px;
           }
@@ -641,7 +593,7 @@ export default {
           display: flex;
           flex-direction: column;
           flex-wrap: wrap;
-          span {
+          a {
             width: 140px;
             text-align: center;
             height: 40px;

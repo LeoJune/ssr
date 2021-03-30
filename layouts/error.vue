@@ -39,7 +39,11 @@
 import { mapGetters } from 'vuex'
 
 export default {
-  components: {
+  props: {
+    error: {
+      type: Object,
+      default: null
+    }
   },
   data () {
     return {
@@ -48,7 +52,13 @@ export default {
   computed: {
     ...mapGetters([
       'hasLogin'
-    ])
+    ]),
+    timeout () {
+      return this.error
+    }
+  },
+  created () {
+    console.log(this.error)
   },
   methods: {
     toMyOrder () {
