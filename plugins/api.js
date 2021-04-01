@@ -216,12 +216,86 @@ export default ({ app: { $request } }, inject) => {
         params
       })
     },
-    // 删除收藏 单
+    // 删除收藏 (单个)
     deleteCollect (params) {
       return $request({
         url: '/sso/deleteCollect/',
         method: 'get',
         params
+      })
+    },
+    // -----------------------------------
+    // 购物车相关
+    // 获取所有存储地址
+    getAllAddress () {
+      return $request({
+        url: '/member/address/list',
+        method: 'get'
+      })
+    },
+    getAddressById (id) {
+      return $request({
+        url: '/member/address/' + id,
+        method: 'get'
+      })
+    },
+    // 添加地址
+    addAddress (data) {
+      return $request({
+        url: '/member/address/add',
+        method: 'post',
+        data
+      })
+    },
+    // 更新地址
+    updateAddress (id, data) {
+      return $request({
+        url: '/member/address/update/' + id,
+        method: 'post',
+        data
+      })
+    },
+    // 删除地址
+    deleteAddress (id) {
+      return $request({
+        url: '/member/address/delete/' + id,
+        method: 'post'
+      })
+    },
+    getProvince () {
+      return $request({
+        url: '/region/privce',
+        method: 'get'
+      })
+    },
+    getCity (id) {
+      return $request({
+        url: '/region/city/' + id,
+        method: 'get'
+      })
+    },
+    getArea (id) {
+      return $request({
+        url: '/region/area/' + id,
+        method: 'get'
+      })
+    },
+    // -----------------------------------
+    // 订单相关
+    generateOrder (data) {
+      return $request({
+        url: '/order/generateOrder',
+        method: 'post',
+        data
+      })
+    },
+    // -----------------------------------
+    // 个人中心相关
+    updateAvatar (data) {
+      return $request({
+        url: '/sso/updateIcon',
+        method: 'post',
+        data
       })
     },
     // 布局footer接口
