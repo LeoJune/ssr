@@ -47,7 +47,7 @@
 
 <script>
 import payWay from '@/components/payment/payWay'
-import { getOrderDetail, orderPayWay, payResult } from '@/api/order'
+// import { getOrderDetail, orderPayWay, payResult } from '@/api/order'
 import QRCode from 'qrcodejs2'
 // import store from '@/store'
 // import { mapGetters } from 'vuex'
@@ -71,14 +71,14 @@ export default {
       qrInstance: null
     }
   },
-  created () {
+  mounted () {
     const id = this.$route.query.id
     this.orderId = id
     this.getOrderInfo(id)
   },
   methods: {
     getOrderInfo (id) {
-      getOrderDetail(id).then(res => {
+      this.$api.getOrderDetail(id).then(res => {
         this.order = res.data
         this.multipleSelection = res.data.orderItemList
       })
@@ -99,7 +99,7 @@ export default {
         //   })
         // }
 
-        payResult(this.orderId).then(res => {
+        this.$api.payResult(this.orderId).then(res => {
           if (res.data === 1) {
             clearInterval(timer)
             this.qrcodeDialogVisible = false
@@ -132,7 +132,7 @@ export default {
         })
         return
       }
-      orderPayWay(this.orderId, { type: this.nowPayWay }).then(res => {
+      this.$api.orderPayWay(this.orderId, { type: this.nowPayWay }).then(res => {
         if (this.nowPayWay === 3) {
           this.$alert('工作人员会联系您进行线下支付', '提示', {
             confirmButtonText: '确定',

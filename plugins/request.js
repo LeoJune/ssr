@@ -52,7 +52,8 @@ export default ({ $axios, store, redirect }, inject) => {
             type: 'warning'
           }).then(() => {
             store.dispatch('user/FedLogout').then(() => {
-              location.reload()// 为了重新实例化vue-router对象 避免bug
+              // location.reload()// 为了重新实例化vue-router对象 避免bug
+              redirect('/login')
             })
           })
         }

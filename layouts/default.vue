@@ -1,14 +1,27 @@
 <template>
   <div class="layout">
     <LayoutHeader />
-    <div class="core">
+    <div
+      id="core"
+      class="core"
+    >
       <nuxt />
     </div>
     <LayoutFooter />
   </div>
 </template>
 <script>
+const noScrollArr = ['/', 'index']
 export default {
+  watch: {
+    $route (newer) {
+      if (!noScrollArr.includes(newer.name)) {
+        console.log('要滚动了')
+        // document.getElementById('core').scrollIntoView()
+        window.scrollTop(578)
+      }
+    }
+  }
 }
 </script>
 
@@ -18,6 +31,7 @@ export default {
 
 html {
   font-family: Microsoft YaHei !important;
+  // scroll-behavior: smooth;
 }
 #app {
   // font-family: Microsoft YaHei !important;

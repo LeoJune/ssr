@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
-import { getToken } from '@/utils/auth'
+// import { getToken } from '@/utils/auth'
 // import { state, mutations } from '@/store/user'
-import store from '@/store'
+// import store from '@/store'
 
 let baseURL = ''
 if (process.server) {
@@ -20,9 +20,9 @@ const service = axios.create({
 
 //  request拦截器
 service.interceptors.request.use(config => {
-  if (store.state.token) {
-    config.headers.Authorization = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-  }
+  // if (store.state.token) {
+  //   config.headers.Authorization = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+  // }
   // if (config.type) {
   //   config.baseURL = '/front'
   // } else {
@@ -58,9 +58,9 @@ service.interceptors.response.use(
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch('FedLogout').then(() => {
-            location.reload()// 为了重新实例化vue-router对象 避免bug
-          })
+          // store.dispatch('FedLogout').then(() => {
+          //   location.reload()// 为了重新实例化vue-router对象 避免bug
+          // })
         })
       }
       return Promise.reject(res.message)

@@ -6,7 +6,16 @@
           src="@/assets/images/offtable.png"
           alt=""
         />
-        <div class="text">
+        <div
+          v-if="timeout"
+          class="text"
+        >
+          <p>请求超时,刷新一下</p>
+        </div>
+        <div
+          v-else
+          class="text"
+        >
           <p class="hard">很抱歉,您查看的页面构建中</p>
           <p>
             你可以去其他地方逛逛:
@@ -54,7 +63,7 @@ export default {
       'hasLogin'
     ]),
     timeout () {
-      return this.error
+      return this.error.message.includes('timeout')
     }
   },
   created () {

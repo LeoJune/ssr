@@ -3,37 +3,75 @@
     <el-upload
       :action="useOss ? ossUploadUrl : minioUploadUrl"
       :data="useOss ? dataObj : null"
-      list-type="picture"
+      listType="picture"
       :multiple="false"
-      :show-file-list="showFileList"
-      :file-list="fileList"
+      :showFileList="showFileList"
+      :fileList="fileList"
       :limit="limit"
       :sizeLimit="sizeLimit"
-      :before-upload="beforeUpload"
-      :on-remove="handleRemove"
-      :on-success="handleUploadSuccess"
-      :on-error="handleError"
-      :on-preview="handlePreview"
+      :beforeUpload="beforeUpload"
+      :onRemove="handleRemove"
+      :onSuccess="handleUploadSuccess"
+      :onRrror="handleError"
+      :onPreview="handlePreview"
     >
-      <el-button size="small" type="primary">点击上传</el-button>
-      <div slot="tip" class="el-upload__tip">
+      <el-button
+        size="small"
+        type="primary"
+      >
+        点击上传
+      </el-button>
+      <div
+        slot="tip"
+        class="el-upload__tip"
+      >
         只能上传jpg/png文件，且不超过{{ limitText }}B
       </div>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="fileList[0].url" alt />
+      <img
+        width="100%"
+        :src="fileList[0].url"
+        alt
+      />
     </el-dialog>
   </div>
 </template>
 <script>
-import { policy } from '@/api/oss'
+// import { policy } from '@/api/oss'
 
 export default {
-  name: 'singleUpload',
+  // name: 'singleUpload',
   props: {
-    value: String,
-    limit: Number,
-    sizeLimit: Number
+    value: {
+      type: String,
+      default: ''
+    },
+    limit: {
+      type: Number,
+      default: 1
+    },
+    sizeLimit: {
+      type: Number,
+      default: 2 * 1024
+    }
+  },
+  data () {
+    return {
+      dataObj: {
+        policy: '',
+        signature: '',
+        key: '',
+        ossaccessKeyId: '',
+        dir: '',
+        host: ''
+        // callback:'',
+      },
+      dialogVisible: false,
+      useOss: true, // 使用oss->true;使用MinIO->false
+      ossUploadUrl: 'https://dimensionaldynamics.oss-cn-hangzhou.aliyuncs.com',
+      minioUploadUrl: 'http://localhost:8080/minio/upload'
+    }
   },
   computed: {
     imageUrl () {
@@ -53,31 +91,14 @@ export default {
       }]
     },
     showFileList: {
-      get: function () {
+      get () {
         return this.value !== null && this.value !== '' && this.value !== undefined
       },
-      set: function (newValue) {
+      set (newValue) {
       }
     },
     limitText () {
       return this.sizeLimit < 1024 ? this.sizeLimit + 'K' : this.sizeLimit / 1024 + 'M'
-    }
-  },
-  data () {
-    return {
-      dataObj: {
-        policy: '',
-        signature: '',
-        key: '',
-        ossaccessKeyId: '',
-        dir: '',
-        host: ''
-        // callback:'',
-      },
-      dialogVisible: false,
-      useOss: true, // 使用oss->true;使用MinIO->false
-      ossUploadUrl: 'https://dimensionaldynamics.oss-cn-hangzhou.aliyuncs.com',
-      minioUploadUrl: 'http://localhost:8080/minio/upload'
     }
   },
   methods: {
@@ -114,7 +135,7 @@ export default {
       }
       const filename = file.name
       return new Promise((resolve, reject) => {
-        policy().then(response => {
+        this.$api.policy().then(response => {
           _self.dataObj.policy = response.data.policy
           _self.dataObj.signature = response.data.signature
           _self.dataObj.ossaccessKeyId = response.data.accessKeyId
@@ -139,7 +160,7 @@ export default {
         // 不使用oss直接获取图片路径
         url = res.data.url
       }
-      this.fileList.push({ name: file.name, url: url })
+      this.fileList.push({ name: file.name, url })
       this.emitInput(this.fileList[0].url)
     },
     handleError (err, file, fileList) {

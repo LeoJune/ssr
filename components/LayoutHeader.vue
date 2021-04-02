@@ -221,11 +221,11 @@ export default {
     //   'tipList'
   },
   beforeMount () {
-    if (!this.$route.meta.notShowBanner) {
-      this.isShowBanner = true
-    } else {
-      this.isShowBanner = false
-    }
+    // if (!this.$route.meta.notShowBanner) {
+    //   this.isShowBanner = true
+    // } else {
+    //   this.isShowBanner = false
+    // }
     if (this.isShowBanner) {
       this.getBanner()
       this.getBrandList()

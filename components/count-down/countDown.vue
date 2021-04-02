@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-  name: 'countDown',
+  // name: 'countDown',
   props: {
     deadLine: {
       type: Number,
@@ -44,21 +44,8 @@ export default {
       return `${hour}:${min}:${sec}`
     }
   },
-  created () {
-
-    // this.count =
-    //   this.deadLine - Date.now() > 0 ? this.deadLine - Date.now() : 0
-    // this.interval = setInterval(() => {
-    //   this.count = this.count - 1000
-    //   if (this.count <= 0) {
-    //     this.count = 0
-    //     // this.$emit('finish')
-    //     clearInterval(this.interval)
-    //   }
-    // }, 1000)
-  },
   watch: {
-    ready: function () {
+    ready () {
       if (this.ready) {
         this.count =
           this.deadLine - Date.now() > 0 ? this.deadLine - Date.now() : 0
@@ -72,6 +59,18 @@ export default {
         }, 1000)
       }
     }
+  },
+  created () {
+    // this.count =
+    //   this.deadLine - Date.now() > 0 ? this.deadLine - Date.now() : 0
+    // this.interval = setInterval(() => {
+    //   this.count = this.count - 1000
+    //   if (this.count <= 0) {
+    //     this.count = 0
+    //     // this.$emit('finish')
+    //     clearInterval(this.interval)
+    //   }
+    // }, 1000)
   }
 }
 </script>

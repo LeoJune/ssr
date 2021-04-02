@@ -3,7 +3,7 @@
 </template>
 <script>
 export default {
-  name: 'countDownInList',
+  // name: 'countDownInList',
   props: {
     deadLine: {
       type: Number,

@@ -9,7 +9,7 @@ export default function ({ app, store }) {
       NProgress.start()
     }
     if (getToken()) {
-      console.log('getToken()+  !!!   ' + getToken())
+      // console.log('getToken()+  !!!   ' + getToken())
       if (to.path === '/login') {
         next({ path: '/' })
         if (process.client) {

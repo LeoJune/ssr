@@ -282,6 +282,7 @@ export default ({ app: { $request } }, inject) => {
     },
     // -----------------------------------
     // 订单相关
+    // 生成订单
     generateOrder (data) {
       return $request({
         url: '/order/generateOrder',
@@ -289,13 +290,142 @@ export default ({ app: { $request } }, inject) => {
         data
       })
     },
+    // 订单详情
+    getOrderDetail (id) {
+      return $request({
+        url: '/order/detail/' + id,
+        method: 'get'
+      })
+    },
+    // 用户支付方式选择
+    orderPayWay (id, params) {
+      return $request({
+        url: '/order/pay/' + id,
+        method: 'post',
+        params // type
+      })
+    },
+    // 轮询支付结果
+    payResult (id) {
+      return $request({
+        url: '/order/isPaySuccess/' + id,
+        method: 'get'
+      })
+    },
+    // 订单列表
+    getOrderList (params) {
+      return $request({
+        url: '/order/list',
+        method: 'get',
+        params
+      })
+    },
+    // 取消订单
+    cancelOrder (params) {
+      return $request({
+        url: '/order/cancelUserOrder',
+        method: 'post',
+        params // orderId
+      })
+    },
+    // 确认收货
+    confirmReceive (params) {
+      return $request({
+        url: '/order/confirmReceiveOrder',
+        method: 'post',
+        params // orderId
+      })
+    },
+    // 删除订单
+    deleteOrder (params) {
+      return $request({
+        url: '/order/deleteOrder',
+        method: 'post',
+        params // orderId
+      })
+    },
+    // 订单支付超时时间
+    getOrderPayTime () {
+      return $request({
+        url: '/systemsetting/getOrderPayTime',
+        method: 'get'
+      })
+    },
+    // 再次购买
+    buyAgain (id) {
+      return $request({
+        url: '/order/buyAgain/' + id,
+        method: 'post'
+      })
+    },
     // -----------------------------------
     // 个人中心相关
+    // oss
+    policy () {
+      return $request({
+        url: '/aliyun/oss/policy',
+        method: 'get'
+      })
+    },
     updateAvatar (data) {
       return $request({
         url: '/sso/updateIcon',
         method: 'post',
         data
+      })
+    },
+    // 站内信
+    searchLetter (params) {
+      return $request({
+        url: '/message/search',
+        method: 'get',
+        type: 1,
+        params
+      })
+    },
+    getLetterById (id) {
+      return $request({
+        url: '/message/detail/' + id,
+        method: 'get',
+        type: 1
+      })
+    },
+    deleteLetter (id) {
+      return $request({
+        url: '/message/delete/' + id,
+        method: 'get',
+        type: 1
+      })
+    },
+    // 在线反馈
+    getAllMessage () {
+      return $request({
+        url: '/product/incart',
+        method: 'get',
+        type: 1
+      })
+    },
+    searchMessage (params) {
+      return $request({
+        url: '/feedback/search',
+        method: 'get',
+        type: 1,
+        params
+      })
+    },
+    sendMessage (data) {
+      return $request({
+        url: '/feedback/feedback',
+        method: 'post',
+        type: 1,
+        data
+      })
+    },
+    getMessageById (id) {
+      return $request({
+        url: '/feedback/detail/' + id,
+        method: 'get',
+        type: 1
       })
     },
     // 布局footer接口

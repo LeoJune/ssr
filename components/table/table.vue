@@ -1,9 +1,18 @@
 <template>
   <div class="table-com">
-    <div class="table-com-header" v-if="isSelect">
+    <div
+      v-if="isSelect"
+      class="table-com-header"
+    >
       已选择
-      <span class="table-com-header-text">{{selectDataList.length}}</span> 项
-      <el-link type="primary" class="ml10 table-com-header-empty" @click="clearSelectTable">清空</el-link>
+      <span class="table-com-header-text">{{ selectDataList.length }}</span> 项
+      <el-link
+        type="primary"
+        class="ml10 table-com-header-empty"
+        @click="clearSelectTable"
+      >
+        清空
+      </el-link>
       <slot name="header"></slot>
     </div>
     <el-table
@@ -11,22 +20,25 @@
       :data="tableData"
       stripe
       class="home-table"
-      @selection-change="selectChange"
-      :cell-class-name="cellClassName"
+      :cellClassName="cellClassName"
+      :headerCellStyle="{background:'#f1f1f1',color:'#666',fontSize:'16px',borderBottom:'1px solid #e1e1e1'}"
       @sort-change="sortChange"
-      :header-cell-style="{background:'#f1f1f1',color:'#666',fontSize:'16px',borderBottom:'1px solid #e1e1e1'}"
+      @selection-change="selectChange"
     >
       <!-- 多选 -->
       <el-table-column
+        v-if="isSelect"
         :selectable="selectable"
         type="selection"
         width="50"
         align="center"
-        v-if="isSelect"
       ></el-table-column>
       <slot></slot>
     </el-table>
-    <div class="table-com-page" v-if="isPage">
+    <div
+      v-if="isPage"
+      class="table-com-page"
+    >
       <PaginationCom
         :current_page.sync="currentPage"
         :pageSize.sync="pageSize"
@@ -40,14 +52,9 @@
 <script>
 import PaginationCom from '@/components/pagination/pagination'
 export default {
-  name: 'tableCom',
+  // name: 'tableCom',
   components: {
     PaginationCom
-  },
-  data () {
-    return {
-      selectDataList: []
-    }
   },
   props: {
     tableData: {
@@ -81,6 +88,18 @@ export default {
     isToggleSelection: {
       type: Boolean,
       default: false
+    }
+  },
+  data () {
+    return {
+      selectDataList: []
+    }
+  },
+  watch: {
+    isToggleSelection () {
+      if (this.isToggleSelection) {
+        this.toggleSelection()
+      }
     }
   },
   methods: {
@@ -121,13 +140,6 @@ export default {
     },
     sortChange (column, prop, order) { // 排序
       this.$emit('sortChange', column, prop, order)
-    }
-  },
-  watch: {
-    isToggleSelection () {
-      if (this.isToggleSelection) {
-        this.toggleSelection()
-      }
     }
   }
 }

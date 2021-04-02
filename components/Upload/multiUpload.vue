@@ -3,33 +3,43 @@
     <el-upload
       :action="useOss ? ossUploadUrl : minioUploadUrl"
       :data="useOss ? dataObj : null"
-      list-type="picture-card"
-      :file-list="fileList"
-      :before-upload="beforeUpload"
-      :on-remove="handleRemove"
-      :on-success="handleUploadSuccess"
-      :on-preview="handlePreview"
+      listType="picture-card"
+      :fileList="fileList"
+      :beforeUpload="beforeUpload"
+      :onRemove="handleRemove"
+      :onSuccess="handleUploadSuccess"
+      :onPreview="handlePreview"
       :limit="maxCount"
-      :on-exceed="handleExceed"
+      :onExceed="handleExceed"
     >
       <i class="el-icon-plus"></i>
-      <div slot="tip" class="el-upload__tip">
+      <div
+        slot="tip"
+        class="el-upload__tip"
+      >
         只能上传jpg/png文件，最多可上传{{ maxCount }}张,且单张不超过2MB
       </div>
     </el-upload>
     <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt />
+      <img
+        width="100%"
+        :src="dialogImageUrl"
+        alt
+      />
     </el-dialog>
   </div>
 </template>
 <script>
-import { policy } from '@/api/oss'
+// import { policy } from '@/api/oss'
 
 export default {
-  name: 'multiUpload',
+  // name: 'multiUpload',
   props: {
     // 图片属性数组
-    value: Array,
+    value: {
+      type: Array,
+      default: () => []
+    },
     // 最大上传图片数量
     maxCount: {
       type: Number,
@@ -101,7 +111,7 @@ export default {
       }
       const filename = file.name
       return new Promise((resolve, reject) => {
-        policy().then(response => {
+        this.$api.policy().then(response => {
           _self.dataObj.policy = response.data.policy
           _self.dataObj.signature = response.data.signature
           _self.dataObj.ossaccessKeyId = response.data.accessKeyId
@@ -121,7 +131,7 @@ export default {
         // 不使用oss直接获取图片路径
         url = res.data.url
       }
-      this.fileList.push({ name: file.name, url: url })
+      this.fileList.push({ name: file.name, url })
       this.emitInput(this.fileList)
     },
     handleExceed (files, fileList) {
