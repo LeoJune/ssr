@@ -61,7 +61,7 @@ export default function ({ app, store }) {
   })
 
   app.router.afterEach(() => {
-    console.log('gundao557-------------------------------')
+    console.log('gundao哈哈哈哈哈哈哈-------------------------------')
     if (process.client) {
       // NProgress.done() // 结束Progress
       console.log('jinlaile')

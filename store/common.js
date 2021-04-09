@@ -28,7 +28,9 @@ export const actions = {
   // 获取banner
   getBanner ({ commit }) {
     this.$api.getAdInDictionary({ type: 1, status: 1 }).then(res => {
+      console.log('开始获取banner！！！！！！！！！！！！！！！！！！！！！！！！')
       commit('SET_BANNERLIST', res.data)
+      console.log('commit banner数据 ！！！！！！！！！！！！！！！！！！！！！！！！')
     })
   },
   getBrand ({ commit }) {

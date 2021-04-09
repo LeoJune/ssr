@@ -1,14 +1,14 @@
 <template>
   <div class="layout-header">
     <div class="header-top core">
-      <div
-        class="header-logo"
-        @click="goHome"
-      >
-        <img
-          src="@/assets/images/header-logo.jpg"
-          alt
-        />
+      <div class="header-logo">
+        <!-- @click="goHome" -->
+        <nuxt-link to="/">
+          <img
+            src="@/assets/images/header-logo.jpg"
+            alt
+          />
+        </nuxt-link>
       </div>
       <div class="header-search">
         <!-- <input type="text" placeholder="请输入产品名称 品牌 型号" /> -->
@@ -142,6 +142,7 @@
               </div>
             </nuxt-link>
             <div
+              v-if="item.children.length > 0"
               v-show="insideShow(index)"
               class="inside"
               :style="'width:' + listWidth(item) + 'px'"

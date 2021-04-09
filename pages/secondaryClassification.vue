@@ -201,9 +201,9 @@ export default {
     joinCart (item) {
       if (!this.hasLogin) {
         this.$message.warning('请先登录')
-        this.$router.push('/login/loginIndex')
+        this.$router.push('/login')
       } else {
-        this.$store.dispatch('AddGood', item).then(res => {
+        this.$store.dispatch('cart/AddGood', item).then(res => {
           this.$message({
             type: 'success',
             duration: 1000,

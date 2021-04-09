@@ -186,12 +186,14 @@ export default {
           params.append('ids', ids)
           // const params = { ids: JSON.stringify(ids) }
           this.$api.deleteProductInCart(params).then(res => {
-            this.$store.dispatch('GetCartInfo').then(res => {
+            this.$store.dispatch('cart/GetCartInfo').then(res => {
               this.$message({
                 type: 'success',
                 message: '删除成功!',
                 duration: 1000
               })
+              // 还原已选 也是还原总计金额
+              this.multipleSelection = []
             })
           })
         })
@@ -203,11 +205,15 @@ export default {
       const params = new URLSearchParams()
       params.append('ids', ids)
       this.$api.deleteProductInCart(params).then(res => {
-        this.$store.dispatch('GetCartInfo').then(res => {
+        this.$store.dispatch('cart/GetCartInfo').then(res => {
           this.$message({
             type: 'success',
             message: '删除成功!',
             duration: 1000
+          })
+          // 还原已选 也是还原总计金额
+          this.multipleSelection = this.multipleSelection.filter(v => {
+            return v.id !== item.id
           })
         })
       })
@@ -221,7 +227,7 @@ export default {
       params.append('id', row.id)
       params.append('quantity', row.quantity)
       this.$api.updateProductNum(params).then(res => {
-        // console.log('更新购物车商品数量')
+        console.log('更新购物车商品数量')
       })
       // this.$store.dispatch('cart/')
     },

@@ -4,7 +4,11 @@ export default function (to, from, savedPosition) {
   if (needTop.includes(to.path)) {
     y = 0
   } else {
-    y = document.getElementById('core').offsetTop - 105
+    if (document.getElementById('core')) {
+      y = document.getElementById('core').offsetTop - 105
+    } else {
+      y = 578
+    }
   }
   return { x: 0, y }
 }

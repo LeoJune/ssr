@@ -11,7 +11,7 @@ export const actions = {
   // async getProductDetail (store, { id, params }) {
   //   return await getProductData({ id, params })
   // }
-  async nuxtServerInit ({ dispatch, commit }, { req }) {
+  async nuxtServerInit ({ dispatch, commit, state }, { req }) {
     console.log('from nuxtSeverInit')
     console.log(req.headers.cookie)
     console.log(typeof req.headers.cookie)
@@ -33,5 +33,6 @@ export const actions = {
     await dispatch({ type: 'common/getNav' })
     await dispatch({ type: 'common/getTip' })
     await dispatch({ type: 'common/getFriendLink' })
+    console.log(state)
   }
 }

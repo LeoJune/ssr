@@ -19,6 +19,7 @@
     </ul>
     <div class="settlement-rignt">
       <!-- <router-view></router-view> -->
+      <!-- :cartList="cartListCopy" -->
       <shopping-cart
         v-show="showStatus[0]"
         :cartList="cartListCopy"
@@ -92,10 +93,15 @@ export default {
       'cartList'
     ])
   },
+  watch: {
+    cartList (newer) {
+      this.cartListCopy = JSON.parse(JSON.stringify(newer))
+    }
+  },
   mounted () {
     this.$store.dispatch('cart/GetCartInfo').then(res => {
       // console.log('chengg from getCartInfo')
-      this.cartListCopy = [...this.cartList]
+      this.cartListCopy = JSON.parse(JSON.stringify(this.cartList))
     }).catch(error => {
       console.log(error + 'from getCartInfo')
     })
