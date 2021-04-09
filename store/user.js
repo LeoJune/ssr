@@ -48,7 +48,10 @@ export const actions = {
       })
     })
   },
-
+  // 单独给store设置token
+  SingleSetToken ({ commit }, token) {
+    commit('SET_TOKEN', token)
+  },
   // 获取用户信息
   GetInfo ({ commit, state }) {
     return new Promise((resolve, reject) => {

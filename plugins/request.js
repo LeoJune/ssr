@@ -5,21 +5,25 @@ import { getToken } from '@/utils/auth'
 
 export default ({ $axios, store, redirect }, inject) => {
   let baseURL = ''
-  if (process.server) {
-    baseURL = 'http://58.49.89.99:8056'
+  if (process.server && process.env.NODE_ENV === 'development') {
+    // console.log(process.env)
+    // console.log(process.env.dev)
+    baseURL = process.env.dev
+  } else if (process.server && process.env.NODE_ENV === 'production') {
+    baseURL = process.env.prod
   } else {
     baseURL = '/front'
   }
   const request = $axios.create({
     baseURL,
-    timeout: 2000
+    timeout: 15000
   })
 
   // request拦截器
   request.interceptors.request.use(
     config => {
-      if (getToken()) {
-        config.headers.Authorization = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+      if (getToken() || store.state.token) {
+        config.headers.Authorization = getToken() || store.state.token // 让每个请求携带自定义token 请根据实际情况自行修改
       }
       return config
     },
@@ -59,7 +63,7 @@ export default ({ $axios, store, redirect }, inject) => {
         }
         return Promise.reject(res.message)
       } else {
-        return response.data
+        return Promise.resolve(response.data)
       }
     },
     error => {
@@ -74,6 +78,6 @@ export default ({ $axios, store, redirect }, inject) => {
     }
   )
 
-  console.log('my request from plugins')
+  // console.log('my request from plugins')
   inject('request', request)
 }

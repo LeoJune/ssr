@@ -424,6 +424,9 @@ export default {
           message: '订单产品已成功加入购物车'
         })
         this.$router.push('/payment')
+      }).catch(err => {
+        console.log(err)
+        this.pageLoading = false
       })
     },
     cancelOrder (id) {

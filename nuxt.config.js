@@ -13,6 +13,10 @@ export default {
   ** See https://nuxtjs.org/api/configuration-target
   */
   target: 'server',
+  // server: {
+  //   host: '0.0.0.0', // 可以让当前局域网内都可以访问
+  //   port: 8888
+  // },
   /*
   ** Headers of the page
   ** See https://nuxtjs.org/api/configuration-head
@@ -42,11 +46,14 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/permission',
+    // { src: '@/plugins/permission', mode: 'client' },
     '@/plugins/request',
     '@/plugins/api'
-    // { src: '@/plugins/permission', mode: 'client' }
     // { src: '@/plugins/axios', mode: 'server' }
   ],
+  // router: {
+  //   middleware: 'permission'
+  // },
   /*
   ** Auto import components
   ** See https://nuxtjs.org/api/configuration-components
@@ -69,7 +76,8 @@ export default {
   ],
   // 环境变量配置
   env: {
-    // VUE_APP_API: process.env.VUE_APP_API
+    dev: 'http://58.49.89.100:8056',
+    prod: 'http://58.49.89.100:8056'
   },
   /*
   ** Axios module configuration
@@ -79,14 +87,8 @@ export default {
     // baseURL: 'http://58.49.89.99:8056/front'
   },
   proxy: {
-    '/api': {
-      target: 'http://58.49.89.99:8055',
-      pathRewrite: { '^/api': '' },
-      changeOrigin: true,
-      ws: false
-    },
     '/front': {
-      target: 'http://58.49.89.99:8056',
+      target: 'http://58.49.89.100:8056',
       pathRewrite: { '^/front': '' },
       changeOrigin: true,
       // logLevel: 'debug',

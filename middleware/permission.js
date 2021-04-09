@@ -60,12 +60,12 @@ export default function ({ app, store }) {
     next()
   })
 
-  app.router.afterEach(() => {
+  app.router.afterEach((to, from, next) => {
     console.log('gundao557-------------------------------')
-    if (process.client) {
-      // NProgress.done() // 结束Progress
-      console.log('jinlaile')
-      document.body.scrollTop = 557
-    }
+    // if (process.client) {
+    //   // NProgress.done() // 结束Progress
+    //   console.log('gundao557')
+    //   document.body.scrollTop = 557
+    // }
   })
 }

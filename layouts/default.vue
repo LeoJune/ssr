@@ -13,12 +13,13 @@
 <script>
 const noScrollArr = ['/', 'index']
 export default {
+  name: 'Default',
   watch: {
     $route (newer) {
       if (!noScrollArr.includes(newer.name)) {
         console.log('要滚动了')
         // document.getElementById('core').scrollIntoView()
-        window.scrollTop(578)
+        // window.scrollTop(578)
       }
     }
   }

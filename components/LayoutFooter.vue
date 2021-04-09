@@ -93,20 +93,26 @@
 <script>
 // import { getAdInDictionary } from '@/api/dictionary'
 import BackTop from '@/components/back-top/backTop.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: {
     BackTop
   },
   data () {
     return {
-      friendLinkList: []
+      // friendLinkList: []
     }
+  },
+  computed: {
+    ...mapGetters([
+      'friendLinkList'
+    ])
   },
   // created () {
   //   this.getList()
   // },
   beforeMount () {
-    this.getList()
+    // this.getList()
   },
   methods: {
     getList () {

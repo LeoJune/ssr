@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import { register, getCode } from '@/api/login'
+// import { register, getCode } from '@/api/login'
 import { isPhone } from '@/utils/validate'
 const myCountDown = 10
 export default {
@@ -181,7 +181,7 @@ export default {
       }
       const that = this
       this.hasGet = true
-      getCode({ phone: this.registerForm.phone }).then(res => {
+      this.$api.getCode({ phone: this.registerForm.phone }).then(res => {
         // this.registerForm.authCode = res.data
       })
 
@@ -206,7 +206,7 @@ export default {
             return false
           }
           this.registerForm.username = this.registerForm.phone
-          register(this.registerForm).then(res => {
+          this.$api.register(this.registerForm).then(res => {
             this.$message({
               message: '注册成功',
               type: 'success',

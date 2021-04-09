@@ -106,10 +106,10 @@ export default {
       })
     },
     handleRegister () {
-      this.$router.push('/login/register')
+      this.$router.push('/register')
     },
     handleForget () {
-      this.$router.push('/login/forgetPassword')
+      this.$router.push('/forgetPassword')
     }
   }
 }

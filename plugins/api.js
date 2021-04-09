@@ -22,9 +22,9 @@ export default ({ app: { $request } }, inject) => {
     },
     // -----------------------------------
     // seo信息获取 就是后台系统设置的接口
-    getDefaultSeoConfig () {
+    getDefaultSeo () {
       return $request({
-        url: '/systemsetting/default',
+        url: '/systemsetting/getSysConf',
         method: 'get'
       })
     },
@@ -165,6 +165,13 @@ export default ({ app: { $request } }, inject) => {
         url: 'product/list',
         method: 'get',
         params
+      })
+    },
+    // 获取分类seo信息
+    getCategorySeo (id) {
+      return $request({
+        url: '/productCategory/getCategoryById/' + id,
+        method: 'get'
       })
     },
     // 获取同级分类

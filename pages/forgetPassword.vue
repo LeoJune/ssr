@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { updatePassword, getCode } from '@/api/login'
+// import { updatePassword, getCode } from '@/api/login'
 import { isPhone } from '@/utils/validate'
 const myCountDown = 10
 export default {
@@ -131,7 +131,7 @@ export default {
 
       const that = this
       this.hasGet = true
-      getCode({ phone: this.resetPasswordForm.phone }).then(res => {
+      this.$api.getCode({ phone: this.resetPasswordForm.phone }).then(res => {
         // this.registerForm.authCode = res.data
       })
       const codeCount = setInterval(() => {
@@ -148,7 +148,7 @@ export default {
         if (valid) {
           this.resetPasswordForm.username = this.resetPasswordForm.phone // username 和 phone 相同,后台要求
           this.loading = true
-          updatePassword(this.resetPasswordForm).then(res => {
+          this.$api.updatePassword(this.resetPasswordForm).then(res => {
             this.loading = false
             this.$message({
               message: '重置成功',

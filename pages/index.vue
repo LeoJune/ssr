@@ -142,7 +142,11 @@ export default {
     let homeLists = [] // 推荐商品（最多三栏的那个）
     let hotList = [] // 热卖商品
     let smallList = [] // 合作伙伴
-    const seoInfo = {}
+    // const seoInfo = {}
+    let seoInfo = {}
+    await app.$api.getDefaultSeo().then(res => {
+      seoInfo = res.data[0]
+    })
     await app.$api.getProductInDictionary({ type: 0, recommendStatus: 1 }).then(res => {
       for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
         res.data[i].quantity = res.data[i].productMinimumPurchase || 1
@@ -180,9 +184,7 @@ export default {
       // this.bannerList = formatArrToFitCarousel(res.data)
       smallList = formatCorperate(res.data, 4)
     })
-    // await app.$api.getDefaultSeoConfig().then(res => {
-    //   seoInfo = res.data
-    // })
+
     return { newList, homeLists, hotList, smallList, seoInfo }
   },
   data () {
@@ -211,28 +213,14 @@ export default {
           require('../assets/images/home-right-small2.png')
         ]
       ],
-      seoInfo: {}
+      seoInfo: {},
+      defaultSeo: '维元动力商城'
     }
   },
   computed: {
     ...mapGetters([
       'hasLogin'
     ])
-  },
-  // created () {
-  //   this.getRecomendHomeList()
-  //   this.getLatestNew()
-  //   this.getHot()
-  //   this.getCorporate()
-  // },
-  beforeMount () {
-    // this.getRecomendHomeList()
-    // this.getLatestNew()
-    // this.getHot()
-    // this.getCorporate()
-    // this.$api.getDefaultSeoConfig().then(res => {
-    //   console.log(res.data)
-    // })
   },
   methods: {
     format (arr, num) {
@@ -270,17 +258,17 @@ export default {
   },
   head () {
     return {
-      title: '维元动力商城',
+      title: this.seoInfo.title ? this.seoInfo.title : this.defaultSeo,
       meta: [
         {
           hid: 'keywords',
           name: 'keywords',
-          content: '维元动力商城'
+          content: this.seoInfo.seoKeyword ? this.seoInfo.seoKeyword : this.defaultSeo
         },
         {
           hid: 'description',
           name: 'description',
-          content: '维元动力商城'
+          content: this.seoInfo.seoDesc ? this.seoInfo.seoDesc : this.defaultSeo
         }
       ]
     }

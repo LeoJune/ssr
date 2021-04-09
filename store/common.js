@@ -27,10 +27,36 @@ export const mutations = {
 export const actions = {
   // 获取banner
   getBanner ({ commit }) {
-    console.log('正在调用getBanner')
     this.$api.getAdInDictionary({ type: 1, status: 1 }).then(res => {
       commit('SET_BANNERLIST', res.data)
-      console.log('调用getBanner结束，已提交')
+    })
+  },
+  getBrand ({ commit }) {
+    this.$api.getBrandList({ typeCode: 'productbrand', pageSize: 100, pageNum: 1 }).then(res => {
+      commit('SET_BRANDLIST', res.data.records)
+    })
+  },
+  getNav ({ commit }) {
+    this.$api.getAllCategory().then(res => {
+      if (res.data.length > 7) {
+        // this.navList = res.data.slice(0, 7)
+        commit('SET_NAVLIST', res.data.slice(0, 7))
+      } else {
+        // this.navList = res.data
+        commit('SET_NAVLIST', res.data)
+      }
+    })
+  },
+  getTip ({ commit }) {
+    this.$api.getRecommdNavAndHome({ navStatus: 1 }).then(res => {
+      // this.tipList = res.data
+      commit('SET_TIPLIST', res.data)
+    })
+  },
+  getFriendLink ({ commit }) {
+    this.$api.getAdInDictionary({ type: 3, status: 1 }).then(res => {
+      // this.friendLinkList = res.data
+      commit('SET_FRIENDLINKLIST', res.data)
     })
   }
 }

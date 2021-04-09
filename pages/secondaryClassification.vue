@@ -69,11 +69,12 @@ export default {
     comProductList
   },
   async asyncData ({ app, query }) {
+    // console.log('又被调用了一次')
     const name = query.name
     const id = query.id
     delete defaultListquery.productCategoryId
     const listQuery = Object.assign({ productCategoryId: id }, defaultListquery)
-    console.log(listQuery)
+    // console.log(listQuery)
     const nowTab = id
     let tabList = [] // 左边的分类tab
     let hotList = [] // 热卖商品
@@ -82,8 +83,11 @@ export default {
     const classTitle = name
     let hasChild = false
     let total = 0
-    const seoInfo = {}
+    let seoInfo = {}
 
+    await app.$api.getCategorySeo(id).then(res => {
+      seoInfo = res.data.productCategorySeo
+    })
     await app.$api.getProductByCategory(listQuery).then(res => {
       for (let i = 0; i < res.data.records.length; i++) { // 加入购物车需要的两个属性
         res.data.records[i].quantity = res.data.records[i].productMinimumPurchase || 1
@@ -92,6 +96,7 @@ export default {
 
         res.data.records[i].productPrice = res.data.records[i].price // 收藏需要的属性
       }
+      // console.log(res.data)
       commodityList = res.data.records
       total = res.data.total
     })
@@ -143,20 +148,6 @@ export default {
     ])
   },
   watchQuery: true,
-  // watch: {
-  //   $route () {
-  //     // console.log('luyoubianhual')
-  //     this.getData()
-  //   }
-  // },
-  // created () {
-  //   this.getData()
-  //   this.getHot()
-  // },
-  beforeMount () {
-    // this.getData()
-    // this.getHot()
-  },
   methods: {
     getListData () {
       this.listLoading = true
@@ -240,6 +231,7 @@ export default {
           this.$router.push({ path: '/secondaryClassification', query: { id: item.id, name: item.name } })
         }
       }).catch(error => {
+        console.log('from error')
         console.log(error)
       })
     },
@@ -250,16 +242,16 @@ export default {
   },
   head () {
     return {
-      title: this.seoInfo.productSeo ? this.seoInfo.productSeo.seoTitle : this.defaultSeo,
+      title: this.seoInfo.seoTitle ? this.seoInfo.seoTitle : this.defaultSeo,
       meta: [
         {
           name: 'keywords',
-          content: this.seoInfo.productSeo ? this.seoInfo.productSeo.seoKeyword : this.defaultSeo
+          content: this.seoInfo.seoKeyword ? this.seoInfo.seoKeyword : this.defaultSeo
         },
         {
           hid: 'description',
           name: 'description',
-          content: this.seoInfo.productSeo ? this.seoInfo.productSeo.seoDesc : this.defaultSeo
+          content: this.seoInfo.seoDesc ? this.seoInfo.seoDesc : this.defaultSeo
         }
       ]
     }

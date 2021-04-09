@@ -85,7 +85,10 @@
           </el-carousel-item>
         </el-carousel>
       </div>
-      <div class="header-nav core">
+      <div
+        id="scrollTarget"
+        class="header-nav core"
+      >
         <div
           class="brand-wrap"
           @mouseenter="changeBrandShow"
@@ -199,13 +202,13 @@ export default {
       searchKeyword: '',
       nowShow: null,
       brandShow: false,
-      bannerList: [
-        require('@/assets/images/header-picture.png'),
-        require('@/assets/images/header-picture.png')
-      ],
-      navList: [], //  导航栏
-      tipList: [], //  导航栏推荐
-      brandList: [],
+      // bannerList: [
+      //   require('@/assets/images/header-picture.png'),
+      //   require('@/assets/images/header-picture.png')
+      // ],
+      // navList: [], //  导航栏
+      // tipList: [], //  导航栏推荐
+      // brandList: [],
       notLoginImg: require('@/assets/images/header-login.png')
     }
   },
@@ -213,7 +216,11 @@ export default {
     ...mapGetters([
       'avatar',
       'hasLogin',
-      'cartList'
+      'cartList',
+      'bannerList',
+      'brandList',
+      'navList',
+      'tipList'
     ])
     // 'bannerList',
     // 'brandList',
@@ -227,10 +234,10 @@ export default {
     //   this.isShowBanner = false
     // }
     if (this.isShowBanner) {
-      this.getBanner()
-      this.getBrandList()
-      this.getAllCategory()
-      this.getRecommdNavAndHome()
+      // this.getBanner()
+      // this.getBrandList()
+      // this.getAllCategory()
+      // this.getRecommdNavAndHome()
     }
   },
   methods: {
