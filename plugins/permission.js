@@ -9,9 +9,9 @@ export default function ({ app, store }) {
     //   NProgress.start()
     // }
     console.log(getToken())
-    console.log(store.state.token)
+    console.log(store.state.user.token)
     console.log('举证完毕')
-    if (getToken() || store.state.token) {
+    if (getToken() || store.state.user.token) {
       console.log('getToken()+  !!!   ' + getToken())
       if (to.path === '/login') {
         next({ path: '/' })

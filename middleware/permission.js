@@ -1,71 +1,43 @@
-// import NProgress from 'nprogress' // Progress 进度条
-import { Message } from 'element-ui'
-import { getToken } from '@/utils/auth' // 是否登陆过
 
-const needLoginPath = ['/addAddress', '/addressManage', '/choosePay', '/myCollect', '/myMessage', '/myMessageDetail', '/myOrder', '/orderDetail', '/payment', '/sendMyMessage', '/userInfo', '/websiteLetter', '/websiteLetterDetail'] // 需要登录的页面
-export default function ({ app, store }) {
-  app.router.beforeEach((to, from, next) => {
-    // if (process.client) {
-    //   NProgress.start()
-    // }
-    console.log(getToken())
-    console.log(store.state.token)
-    console.log('举证完毕')
-    if (getToken() || store.state.token) {
-      console.log('getToken()+  !!!   ' + getToken())
-      if (to.path === '/login') {
-        next({ path: '/' })
-        if (process.client) {
-          // NProgress.done() // if current page is dashboard will not trigger afterEach hook, so manually handle it
-        }
-      } else if (store.getters.username === '') {
-        store.dispatch('user/GetInfo').then(res => {
-          if (to.meta.needLogin) {
-            if (!store.getters.hasLogin) {
-              Message({
-                type: 'warning',
-                message: '请先登陆',
-                duration: 1000
-              })
-              next('/login')
-            }
-          }
-          store.dispatch('cart/GetCartInfo').then(res => {
-            console.log('chengg from getCartInfo')
-          }).catch(error => {
-            console.log(error + 'from getCartInfo')
-          })
-        }).catch((err) => {
-          store.dispatch('user/FedLogout').then(() => {
-            Message.error(err || '认证失败,请重新登陆')
-            next({ path: '/' })
-          })
-        })
-      }
-    } else if (needLoginPath.includes(to.path)) {
-      console.log('没有token')
-      if (!store.getters.hasLogin) {
-        Message({
-          type: 'warning',
-          message: '请先登陆',
-          duration: 1000
-        })
-        next('/login')
+// const needLoginPath = ['/addAddress', '/addressManage', '/choosePay', '/myCollect', '/myMessage', '/myMessageDetail', '/myOrder', '/orderDetail', '/payment', '/sendMyMessage', '/userInfo', '/websiteLetter', '/websiteLetterDetail'] // 需要登录的页面
+import { getToken } from '@/utils/auth'
+
+const redirectUrl = '/login'
+export default function ({ route, req, res, redirect, store }) {
+  const isClient = process.client
+  const isServer = process.server
+  let myToken
+  if (isServer) {
+    const cookies = req.headers.cookie
+    if (cookies && cookies.includes('loginToken')) {
+      if (cookies.includes(';')) {
+        myToken = cookies.split(';').filter(v => {
+          return v.includes('loginToken')
+        })[0].split('=')[1]
+      } else {
+        myToken = cookies.split('=')[1]
       }
     }
-    // else {
-    //   console.log('没有token也不属于需要登录的页面')
-    //   next()
-    // }
-    next()
-  })
-
-  app.router.afterEach((to, from, next) => {
-    console.log('gundao557-------------------------------')
-    // if (process.client) {
-    //   // NProgress.done() // 结束Progress
-    //   console.log('gundao557')
-    //   document.body.scrollTop = 557
-    // }
-  })
+    console.log(myToken + '-------------from isServer')
+  }
+  if (isClient) {
+    myToken = getToken()
+  }
+  if (!myToken) {
+    console.log('qudenglu')
+    redirect(redirectUrl)
+  }
+  // else {
+  //   console.log(myToken)
+  //   console.log('from middleware')
+  //   store.dispatch('user/SingleSetToken', myToken).then(() => {
+  //     console.log('已经设置了token在server端')
+  //     console.log(store.state.user.token)
+  //     store.dispatch('user/GetInfo').then(() => {
+  //       console.log('获取成功')
+  //     }).catch(err => {
+  //       console.log(err)
+  //     })
+  //   })
+  // }
 }

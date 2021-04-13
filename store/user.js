@@ -49,13 +49,18 @@ export const actions = {
     })
   },
   // 单独给store设置token
-  SingleSetToken ({ commit }, token) {
-    commit('SET_TOKEN', token)
+  SingleSetToken ({ state, commit }, token) {
+    return new Promise((resolve, reject) => {
+      console.log('单独设置token')
+      commit('SET_TOKEN', token)
+      resolve()
+    })
   },
   // 获取用户信息
   GetInfo ({ commit, state }) {
     return new Promise((resolve, reject) => {
       this.$api.getInfo().then(response => {
+        console.log('开始通过action getInfo中获取用户信息')
         const data = response.data
         commit('SET_USERNAME', data.username)
         commit('SET_AVATAR', data.icon || defaultUserImg)

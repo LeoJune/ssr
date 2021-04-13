@@ -79,13 +79,12 @@ export default {
     return {
       nowUserNav: '在线反馈',
       returnIcon: require('@/assets/images/return.png'),
+      // require('@/assets/images/send-my-message-1.png'),
+      // require('@/assets/images/send-my-message-2.png')
       info: {
         createTime: '2018-10-30 03:04:56',
         replyTime: null,
-        imgList: [
-          require('@/assets/images/send-my-message-1.png'),
-          require('@/assets/images/send-my-message-2.png')
-        ],
+        imgList: [],
         content: '',
         replyContent: null
       }

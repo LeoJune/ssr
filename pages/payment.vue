@@ -27,7 +27,6 @@
         @multipleChange="multipleChange"
         @nextStep="nextStep"
       ></shopping-cart>
-      <!-- @multipleChange="multipleChange" -->
       <address-select
         v-show="showStatus[1]"
         :addressList="addressList"
@@ -73,6 +72,7 @@ export default {
   components: {
     shoppingCart, addressSelect, orderConfirm
   },
+  middleware: 'permission',
   data () {
     return {
       active: 0,

@@ -40,6 +40,9 @@ export const actions = {
   },
   getNav ({ commit }) {
     this.$api.getAllCategory().then(res => {
+      console.log('打印res.data')
+      console.log(res.data)
+      console.log('开始获取nav！！！！！！！！！！！！！！！！！！！！！！！！')
       if (res.data.length > 7) {
         // this.navList = res.data.slice(0, 7)
         commit('SET_NAVLIST', res.data.slice(0, 7))
@@ -47,6 +50,7 @@ export const actions = {
         // this.navList = res.data
         commit('SET_NAVLIST', res.data)
       }
+      console.log('commit nav 数据！！！！！！！！！！！！！！！！！！！！！！！！')
     })
   },
   getTip ({ commit }) {

@@ -22,8 +22,8 @@ export default ({ $axios, store, redirect }, inject) => {
   // request拦截器
   request.interceptors.request.use(
     config => {
-      if (getToken() || store.state.token) {
-        config.headers.Authorization = getToken() || store.state.token // 让每个请求携带自定义token 请根据实际情况自行修改
+      if (getToken() || store.state.user.token) {
+        config.headers.Authorization = getToken() || store.state.user.token // 让每个请求携带自定义token 请根据实际情况自行修改
       }
       return config
     },
@@ -50,19 +50,31 @@ export default ({ $axios, store, redirect }, inject) => {
         })
         // 401:未登录;
         if (res.code === 401) {
-          MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            store.dispatch('user/FedLogout').then(() => {
-              // location.reload()// 为了重新实例化vue-router对象 避免bug
-              redirect('/login')
+          if (process.client) {
+            MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+              confirmButtonText: '重新登录',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              store.dispatch('user/FedLogout').then(() => {
+                // location.reload()// 为了重新实例化vue-router对象 避免bug
+                console.log('因获取用户信息失败跳转')
+                redirect('/login')
+              })
             })
-          })
+          }
+          // else { // 服务端不再发送需要token的请求
+          //   store.dispatch('user/FedLogout').then(() => {
+          //     // location.reload()// 为了重新实例化vue-router对象 避免bug
+          //     console.log('在serve 端被登出 behind fedLogout')
+          //     redirect('/login')
+          //   })
+          // }
         }
+        console.log(response)
         return Promise.reject(res.message)
       } else {
+        // console.log(response)
         return Promise.resolve(response.data)
       }
     },

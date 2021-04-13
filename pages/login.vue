@@ -82,6 +82,8 @@ export default {
           this.$store.dispatch('user/Login', this.loginForm).then(res => {
             this.loading = false
             this.$router.back(-1)
+            this.$store.dispatch('user/GetInfo')
+            this.$store.dispatch('cart/GetCartInfo')
           }).catch(err => {
             console.log(err)
             this.loading = false

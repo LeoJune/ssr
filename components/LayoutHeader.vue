@@ -234,11 +234,20 @@ export default {
     // } else {
     //   this.isShowBanner = false
     // }
-    if (this.isShowBanner) {
-      // this.getBanner()
-      // this.getBrandList()
-      // this.getAllCategory()
-      // this.getRecommdNavAndHome()
+    // if (this.isShowBanner) {
+    // this.getBanner()
+    // this.getBrandList()
+    // this.getAllCategory()
+    // this.getRecommdNavAndHome()
+    // }
+    this.$store.dispatch('common/getBanner')
+    this.$store.dispatch('common/getBrand')
+    this.$store.dispatch('common/getNav')
+    this.$store.dispatch('common/getTip')
+    this.$store.dispatch('common/getFriendLink')
+    if (this.$store.state.user.token && this.$store.state.user.username === '') {
+      this.$store.dispatch('user/GetInfo')
+      this.$store.dispatch('cart/GetCartInfo')
     }
   },
   methods: {

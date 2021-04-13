@@ -45,7 +45,7 @@ export default {
   */
   plugins: [
     '@/plugins/element-ui',
-    '@/plugins/permission',
+    // '@/plugins/permission',
     // { src: '@/plugins/permission', mode: 'client' },
     '@/plugins/request',
     '@/plugins/api'

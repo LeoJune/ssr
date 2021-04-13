@@ -1,5 +1,7 @@
 <template>
   <div class="home">
+    <!-- <div @click="testCookies1">测试token1</div>
+    <div @click="testCookies2">测试token2</div> -->
     <div class="home-left">
       <div class="home-left-title">
         <img
@@ -126,6 +128,7 @@
 
 <script>
 // import store from '@/store'
+import { setToken, getToken } from '@/utils/auth'
 import { mapGetters } from 'vuex'
 import { formatArrToFitCarousel, formatCorperate } from '@/utils/validate'
 import Carousel from '@/components/carousel/carousel.vue'
@@ -223,6 +226,12 @@ export default {
     ])
   },
   methods: {
+    testCookies2 () {
+      console.log(setToken)
+    },
+    testCookies1 () {
+      console.log(getToken())
+    },
     format (arr, num) {
       return formatCorperate(arr, num)
     },
@@ -258,7 +267,7 @@ export default {
   },
   head () {
     return {
-      title: this.seoInfo.title ? this.seoInfo.title : this.defaultSeo,
+      title: this.seoInfo.seoTitle ? this.seoInfo.seoTitle : this.defaultSeo,
       meta: [
         {
           hid: 'keywords',

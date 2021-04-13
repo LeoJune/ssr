@@ -193,7 +193,8 @@ export default {
                 duration: 1000
               })
               // 还原已选 也是还原总计金额
-              this.multipleSelection = []
+              // this.multipleSelection = []
+              this.$emit('multipleChange', [])
             })
           })
         })
@@ -212,9 +213,10 @@ export default {
             duration: 1000
           })
           // 还原已选 也是还原总计金额
-          this.multipleSelection = this.multipleSelection.filter(v => {
+          const tempArr = this.multipleSelection.filter(v => {
             return v.id !== item.id
           })
+          this.$emit('multipleChange', tempArr)
         })
       })
     },
