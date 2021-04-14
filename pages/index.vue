@@ -128,7 +128,7 @@
 
 <script>
 // import store from '@/store'
-import { setToken, getToken } from '@/utils/auth'
+// import { setToken, getToken } from '@/utils/auth'
 import { mapGetters } from 'vuex'
 import { formatArrToFitCarousel, formatCorperate } from '@/utils/validate'
 import Carousel from '@/components/carousel/carousel.vue'
@@ -227,10 +227,10 @@ export default {
   },
   methods: {
     testCookies2 () {
-      console.log(setToken)
+      localStorage.setItem('localtest', 'localsStorage')
     },
     testCookies1 () {
-      console.log(getToken())
+      sessionStorage.setItem('sessiontext', 'sessionStore')
     },
     format (arr, num) {
       return formatCorperate(arr, num)
