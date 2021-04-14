@@ -1,62 +1,62 @@
 <template>
-  <div>
-    <Nuxt />
+  <div class="layout">
+    <LayoutHeader />
+    <div
+      id="core"
+      class="core"
+    >
+      <nuxt />
+    </div>
+    <LayoutFooter />
   </div>
 </template>
+<script>
+const noScrollArr = ['/', 'index']
+export default {
+  name: 'Default',
+  watch: {
+    $route (newer) {
+      if (!noScrollArr.includes(newer.name)) {
+        console.log('要滚动了')
+        // document.getElementById('core').scrollIntoView()
+        // window.scrollTop(578)
+      }
+    }
+  }
+}
+</script>
 
-<style>
+<style lang='less'>
+@import "@/assets/font/font.css";
+@import "nprogress/nprogress.css"; // 进度条样式
+
 html {
-  font-family:
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
-  font-size: 16px;
-  word-spacing: 1px;
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
+  font-family: Microsoft YaHei !important;
+  // scroll-behavior: smooth;
+}
+#app {
+  // font-family: Microsoft YaHei !important;
+  // font-family: mFont !important;
+}
+body {
+  width: 100%;
+  overflow-x: hidden;
+}
+.core {
+  width: 1280px;
+  margin: 0 auto;
+}
+.borderBox {
   box-sizing: border-box;
 }
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
+.angle {
+  width: 18px;
+  height: 10px;
 }
-
-.button--green {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #3b8070;
-  color: #3b8070;
-  text-decoration: none;
-  padding: 10px 30px;
+.price-color {
+  color: #e73b57;
 }
-
-.button--green:hover {
-  color: #fff;
-  background-color: #3b8070;
-}
-
-.button--grey {
-  display: inline-block;
-  border-radius: 4px;
-  border: 1px solid #35495e;
-  color: #35495e;
-  text-decoration: none;
-  padding: 10px 30px;
-  margin-left: 15px;
-}
-
-.button--grey:hover {
-  color: #fff;
-  background-color: #35495e;
+.normal-blue {
+  color: #0093e6;
 }
 </style>

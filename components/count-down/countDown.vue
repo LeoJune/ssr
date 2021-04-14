@@ -1,0 +1,77 @@
+<template>
+  <div>{{ time }}</div>
+</template>
+<script>
+export default {
+  // name: 'countDown',
+  props: {
+    deadLine: {
+      type: Number,
+      default: null
+    },
+    ready: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data () {
+    return {
+      count: null,
+      interval: null
+    }
+  },
+  computed: {
+    time () {
+      if (this.count === null || this.count === undefined) {
+        return ''
+      }
+      // let day = parseInt(this.count / (3600 * 24 * 1000))
+      // let hour = parseInt((this.count - day * 3600 * 24 * 1000) / 3600 / 1000)
+      // let min = parseInt((this.count - day * 3600 * 24 * 1000 - hour * 3600 * 1000) / 60 / 1000)
+      // let sec = parseInt((this.count - day * 3600 * 24 * 1000 - hour * 3600 * 1000 - min * 60 * 1000) / 1000)
+      let hour = parseInt(this.count / 3600 / 1000)
+      let min = parseInt((this.count - hour * 3600 * 1000) / 60 / 1000)
+      let sec = parseInt((this.count - hour * 3600 * 1000 - min * 60 * 1000) / 1000)
+      if (hour < 10) {
+        hour = '0' + hour
+      }
+      if (min < 10) {
+        min = '0' + min
+      }
+      if (sec < 10) {
+        sec = '0' + sec
+      }
+      return `${hour}:${min}:${sec}`
+    }
+  },
+  watch: {
+    ready () {
+      if (this.ready) {
+        this.count =
+          this.deadLine - Date.now() > 0 ? this.deadLine - Date.now() : 0
+        this.interval = setInterval(() => {
+          this.count = this.count - 1000
+          if (this.count <= 0) {
+            this.count = 0
+            // this.$emit('finish')
+            clearInterval(this.interval)
+          }
+        }, 1000)
+      }
+    }
+  },
+  created () {
+    // this.count =
+    //   this.deadLine - Date.now() > 0 ? this.deadLine - Date.now() : 0
+    // this.interval = setInterval(() => {
+    //   this.count = this.count - 1000
+    //   if (this.count <= 0) {
+    //     this.count = 0
+    //     // this.$emit('finish')
+    //     clearInterval(this.interval)
+    //   }
+    // }, 1000)
+  }
+}
+</script>
+<style scoped></style>

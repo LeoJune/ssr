@@ -1,0 +1,173 @@
+<template>
+  <div>
+    <el-upload
+      :action="useOss ? ossUploadUrl : minioUploadUrl"
+      :data="useOss ? dataObj : null"
+      listType="picture"
+      :multiple="false"
+      :showFileList="showFileList"
+      :fileList="fileList"
+      :limit="limit"
+      :sizeLimit="sizeLimit"
+      :beforeUpload="beforeUpload"
+      :onRemove="handleRemove"
+      :onSuccess="handleUploadSuccess"
+      :onRrror="handleError"
+      :onPreview="handlePreview"
+    >
+      <el-button
+        size="small"
+        type="primary"
+      >
+        点击上传
+      </el-button>
+      <div
+        slot="tip"
+        class="el-upload__tip"
+      >
+        只能上传jpg/png文件，且不超过{{ limitText }}B
+      </div>
+    </el-upload>
+    <el-dialog :visible.sync="dialogVisible">
+      <img
+        width="100%"
+        :src="fileList[0].url"
+        alt
+      />
+    </el-dialog>
+  </div>
+</template>
+<script>
+// import { policy } from '@/api/oss'
+
+export default {
+  // name: 'singleUpload',
+  props: {
+    value: {
+      type: String,
+      default: ''
+    },
+    limit: {
+      type: Number,
+      default: 1
+    },
+    sizeLimit: {
+      type: Number,
+      default: 2 * 1024
+    }
+  },
+  data () {
+    return {
+      dataObj: {
+        policy: '',
+        signature: '',
+        key: '',
+        ossaccessKeyId: '',
+        dir: '',
+        host: ''
+        // callback:'',
+      },
+      dialogVisible: false,
+      useOss: true, // 使用oss->true;使用MinIO->false
+      ossUploadUrl: 'https://dimensionaldynamics.oss-cn-hangzhou.aliyuncs.com',
+      minioUploadUrl: 'http://localhost:8080/minio/upload'
+    }
+  },
+  computed: {
+    imageUrl () {
+      return this.value
+    },
+    imageName () {
+      if (this.value != null && this.value !== '') {
+        return this.value.substr(this.value.lastIndexOf('/') + 1)
+      } else {
+        return null
+      }
+    },
+    fileList () {
+      return [{
+        name: this.imageName,
+        url: this.imageUrl
+      }]
+    },
+    showFileList: {
+      get () {
+        return this.value !== null && this.value !== '' && this.value !== undefined
+      },
+      set (newValue) {
+      }
+    },
+    limitText () {
+      return this.sizeLimit < 1024 ? this.sizeLimit + 'K' : this.sizeLimit / 1024 + 'M'
+    }
+  },
+  methods: {
+    emitInput (val) {
+      this.$emit('input', val)
+    },
+    handleRemove (file, fileList) {
+      this.emitInput('')
+    },
+    handlePreview (file) {
+      this.dialogVisible = true
+    },
+    beforeUpload (file) {
+      // 格式大小限制
+      const isJPG = file.type === 'image/jpeg'
+      const isPNG = file.type === 'image/png'
+      const isLt2M = file.size / 1024 < this.sizeLimit
+
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传图片只能是 JPG或PNG 格式!')
+        return false
+      }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过限制')
+        return false
+      }
+      // return isJPG && isLt2M
+      // 格式大小限制
+
+      const _self = this
+      if (!this.useOss) {
+        // 不使用oss不需要获取策略
+        return true
+      }
+      const filename = file.name
+      return new Promise((resolve, reject) => {
+        this.$api.policy().then(response => {
+          _self.dataObj.policy = response.data.policy
+          _self.dataObj.signature = response.data.signature
+          _self.dataObj.ossaccessKeyId = response.data.accessKeyId
+          _self.dataObj.key = response.data.dir + `/${filename}`
+          _self.dataObj.dir = response.data.dir
+          _self.dataObj.host = response.data.host
+          // _self.dataObj.callback = response.data.callback
+          resolve(true)
+        }).catch(err => {
+          console.log(err)
+          reject(err)
+        })
+      })
+    },
+    handleUploadSuccess (res, file) {
+      console.log('upload success')
+      console.log(res)
+      this.showFileList = true
+      this.fileList.pop()
+      let url = this.dataObj.host + '/' + this.dataObj.dir + '/' + file.name
+      if (!this.useOss) {
+        // 不使用oss直接获取图片路径
+        url = res.data.url
+      }
+      this.fileList.push({ name: file.name, url })
+      this.emitInput(this.fileList[0].url)
+    },
+    handleError (err, file, fileList) {
+      console.log(err)
+    }
+  }
+}
+</script>
+<style>
+</style>
