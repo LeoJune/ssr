@@ -60,7 +60,7 @@
             />
             <div>
               <span @click="toUserInfo">个人中心</span>|
-              <span @click="logout">退出登陆</span>
+              <span @click="logout">退出登录</span>
             </div>
           </div>
         </div>
@@ -184,12 +184,31 @@ export default {
       default: true
     }
   },
-  // async fetch ({ app, store }) {
-  //   console.log('from fetch')
-  //   this.bannerList = await app.$api.getAdInDictionary({ type: 1, status: 1 }).then(res => {
-  //     return res.data
-  //   })
-  // },
+  async fetch () {
+    console.log('from fetch')
+    this.bannerList = await this.$api.getAdInDictionary({ type: 1, status: 1 }).then(res => {
+      return res.data
+    })
+    this.brandList = await this.$api.getBrandList({ typeCode: 'productbrand', pageSize: 100, pageNum: 1 }).then(res => {
+      return res.data.records
+    })
+    this.navList = await this.$api.getAllCategory().then(res => {
+      return res.data.length > 7 ? res.data.slice(0, 7) : res.data
+    })
+    this.tipList = await this.$api.getRecommdNavAndHome({ navStatus: 1 }).then(res => {
+      return res.data
+    })
+    // this.brandListCopy = bannerList
+    // await this.$store.dispatch('common/getBanner')
+    // await this.$store.dispatch('common/getBrand')
+    // await this.$store.dispatch('common/getNav')
+    // await this.$store.dispatch('common/getTip')
+    // await this.$store.dispatch('common/getFriendLink')
+    // this.bannerList = bannerList
+    // this.brandList = brandList
+    // this.navList = navList
+    // this.tipList = tipList
+  },
   data () {
     return {
       dialogVisible: false,
@@ -203,30 +222,24 @@ export default {
       searchKeyword: '',
       nowShow: null,
       brandShow: false,
-      // bannerList: [
-      //   require('@/assets/images/header-picture.png'),
-      //   require('@/assets/images/header-picture.png')
-      // ],
-      // navList: [], //  导航栏
-      // tipList: [], //  导航栏推荐
-      // brandList: [],
-      notLoginImg: require('@/assets/images/header-login.png')
+      bannerList: [], // banner图
+      navList: [], //  导航栏
+      tipList: [], //  导航栏推荐
+      brandList: [], // 品牌
+      notLoginImg: require('@/assets/images/header-login.png'),
+      brandListCopy: []
     }
   },
   computed: {
     ...mapGetters([
       'avatar',
       'hasLogin',
-      'cartList',
-      'bannerList',
-      'brandList',
-      'navList',
-      'tipList'
+      'cartList'
+      // 'bannerList',
+      // 'brandList',
+      // 'navList',
+      // 'tipList'
     ])
-    // 'bannerList',
-    // 'brandList',
-    //   'navList',
-    //   'tipList'
   },
   beforeMount () {
     // if (!this.$route.meta.notShowBanner) {
@@ -240,11 +253,6 @@ export default {
     // this.getAllCategory()
     // this.getRecommdNavAndHome()
     // }
-    this.$store.dispatch('common/getBanner')
-    this.$store.dispatch('common/getBrand')
-    this.$store.dispatch('common/getNav')
-    this.$store.dispatch('common/getTip')
-    this.$store.dispatch('common/getFriendLink')
     if (this.$store.state.user.token && this.$store.state.user.username === '') {
       this.$store.dispatch('user/GetInfo')
       this.$store.dispatch('cart/GetCartInfo')

@@ -1,7 +1,7 @@
 
 // const needLoginPath = ['/addAddress', '/addressManage', '/choosePay', '/myCollect', '/myMessage', '/myMessageDetail', '/myOrder', '/orderDetail', '/payment', '/sendMyMessage', '/userInfo', '/websiteLetter', '/websiteLetterDetail'] // 需要登录的页面
 import { getToken } from '@/utils/auth'
-
+import { Message } from 'element-ui'
 const redirectUrl = '/login'
 export default function ({ route, req, res, redirect, store }) {
   const isClient = process.client
@@ -25,6 +25,11 @@ export default function ({ route, req, res, redirect, store }) {
   }
   if (!myToken) {
     console.log('qudenglu')
+    Message({
+      type: 'warning',
+      message: '请先登录',
+      duration: 1000
+    })
     redirect(redirectUrl)
   }
   // else {

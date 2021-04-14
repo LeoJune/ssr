@@ -1,6 +1,6 @@
 // import NProgress from 'nprogress' // Progress 进度条
 import { Message } from 'element-ui'
-import { getToken } from '@/utils/auth' // 是否登陆过
+import { getToken } from '@/utils/auth' // 是否登录过
 
 const needLoginPath = ['/addAddress', '/addressManage', '/choosePay', '/myCollect', '/myMessage', '/myMessageDetail', '/myOrder', '/orderDetail', '/payment', '/sendMyMessage', '/userInfo', '/websiteLetter', '/websiteLetterDetail'] // 需要登录的页面
 export default function ({ app, store }) {
@@ -24,7 +24,7 @@ export default function ({ app, store }) {
             if (!store.getters.hasLogin) {
               Message({
                 type: 'warning',
-                message: '请先登陆',
+                message: '请先登录',
                 duration: 1000
               })
               next('/login')
@@ -37,7 +37,7 @@ export default function ({ app, store }) {
           })
         }).catch((err) => {
           store.dispatch('user/FedLogout').then(() => {
-            Message.error(err || '认证失败,请重新登陆')
+            Message.error(err || '认证失败,请重新登录')
             next({ path: '/' })
           })
         })
@@ -47,7 +47,7 @@ export default function ({ app, store }) {
       if (!store.getters.hasLogin) {
         Message({
           type: 'warning',
-          message: '请先登陆',
+          message: '请先登录',
           duration: 1000
         })
         next('/login')

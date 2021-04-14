@@ -98,14 +98,19 @@ export default {
   components: {
     BackTop
   },
+  async fetch () {
+    this.friendLinkList = await this.$api.getAdInDictionary({ type: 3, status: 1 }).then(res => {
+      return res.data
+    })
+  },
   data () {
     return {
-      // friendLinkList: []
+      friendLinkList: []
     }
   },
   computed: {
     ...mapGetters([
-      'friendLinkList'
+      // 'friendLinkList'
     ])
   },
   // created () {

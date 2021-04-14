@@ -1,6 +1,6 @@
 <template>
   <div class="loginIndex">
-    <h2 class="title">用户登陆</h2>
+    <h2 class="title">用户登录</h2>
     <el-form
       ref="loginForm"
       :model="loginForm"
@@ -38,7 +38,7 @@
         class="mybutton"
         @click="handleLogin"
       >
-        登陆
+        登录
       </el-button>
       <div class="flex">
         <p @click="handleRegister">免费注册</p>
@@ -92,7 +92,7 @@ export default {
           // login(this.loginForm).then(res => {
           //   this.loading = false
           //   this.$message({
-          //     message: '登陆成功',
+          //     message: '登录成功',
           //     type: 'success',
           //     duration: 1000
           //   })

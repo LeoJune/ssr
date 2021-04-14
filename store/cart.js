@@ -36,7 +36,7 @@ export const actions = {
   ClearSelectAddressInfo ({ commit }) {
     commit('SET_SELECTADDRESS', [])
   },
-  // 退出登陆时清空本地购物车
+  // 退出登录时清空本地购物车
   ClearCart ({ commit }) {
     commit('SET_CARTLIST', [])
   },
