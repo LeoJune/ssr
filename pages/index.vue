@@ -22,19 +22,27 @@
             alt
           />
         </div>
-        <div class="home-left-item-title">
-          {{ item.productName }}
+        <div class="home-left-item-title" :title="(item.brandName ? item.brandName : '') + ' ' + (item.productName ? item.productName : '') + ' ' + (item.productSn ? item.productSn : '') + ' ' + (item.productOldNumber ? '/' + item.productOldNumber : '')">
+          {{
+          (item.brandName ? item.brandName : "") +
+          " " +
+          (item.productName ? item.productName : "") +
+          " " +
+          (item.productSn ? item.productSn : "") +
+          " " +
+          (item.productOldNumber ? '/' + item.productOldNumber : "")
+          }}
         </div>
         <div class="home-left-item-info">
-          <div class="info-item">
-            品牌：{{ item.brandName }}
-          </div>
-          <div class="info-item">
-            重量：{{ item.weight }}
-          </div>
+          <div class="info-item">品牌：{{ item.brandName }}</div>
+          <!-- <div class="info-item">重量：{{ item.weight }}</div>
           <div class="info-item">
             最低起订量：{{ item.productMinimumPurchase }} 件
-          </div>
+          </div> -->
+          <div class="info-item">适用机型：{{ item.productApplyType }}</div>
+          <div class="info-item">件号：{{ (item.productSn ? item.productSn : "") +
+            " " +
+            (item.productOldNumber ? '/' + item.productOldNumber : "") }} </div>
         </div>
         <div class="home-left-item-price">
           ￥{{ item.price }}
@@ -53,7 +61,7 @@
       </div>
       <div class="home-right-info-desc">
         <p>
-          义乌市维元动力设备有限公司是一家专业从事燃气动力、燃气发电机组产品的研发、生产、销售、维修服务并拥有自营进出口权的专业公司。公司拥有一批从事超过15年燃气发动机研发、生产经验的专业化人才，近年来不断的吸纳高校专业化技术人员,企业建立一套良好的质量管理体系和产品服务管理体系...
+          武汉市维元动力机械设备有限公司是一家专业从事燃气动力、燃气发电机组产品的研发、生产、销售、维修服务并拥有自营进出口权的专业公司。公司拥有一批从事超过15年燃气发动机研发、生产经验的专业化人才，近年来不断的吸纳高校专业化技术人员,企业建立一套良好的质量管理体系和产品服务管理体系...
         </p>
         <nuxt-link to="/companyProfile">
           <div class="home-right-info-more">
@@ -101,7 +109,7 @@
         </div>
         <p>一站式购买流程，让您体验到最极致的服务与便利！</p>
         <div class="home-right-buy-desc">
-          很简单！只需单击几下，您便可以确保开设一个客户帐户，在线访问更多功能；很简单！只需单击几下，您便可以确保开设一个客户帐户，在线访问更多功能；很简单！只需单击几您便可以确保开设一个客户帐户，您便可以确保开设一个客户帐户，在线访问更多功能；很简单！只需单击几下，您便可以确保开设一个客户帐户，在线访问更多功能；在线访问更多功能您便可以确保开设一个客户帐户，在线访问更多功能；很简单！只需单击几下，您便可以确保开设一个客户帐户，在线访问更多功能；在线访问更多功能！
+          维元动力商城不仅仅是一个简单的购物网站，点击网站右上角“注册“，成为我们的新客户；登陆后，您会得到优惠的价格。在个人中心，您可以编辑用户信息，管理收货地址，接收站内活动信息，跟踪订单进展，在线咨询技术问题等服务。维元动力7×24小时为您在线服务，第一时间响应您的需求。还在等什么，赶快注册吧！我们期待您的加入。
         </div>
         <div class="home-right-buy-img">
           <img
@@ -154,6 +162,8 @@ export default {
       for (let i = 0; i < res.data.length; i++) { // 加入购物车需要的两个属性
         res.data[i].quantity = res.data[i].productMinimumPurchase || 1
         res.data[i].productPic = res.data[i].pic
+
+        res.data[i].displayProductSn = res.data[i].productSn ? (res.data[i].productSn + (res.data[i].productOldNumber ? '/' + res.data[i].productOldNumber : '')) : '' // 6.3展示字段调整所做更改
       }
       newList = formatArrToFitCarousel(res.data)
     })

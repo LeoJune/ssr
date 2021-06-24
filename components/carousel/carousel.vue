@@ -2,63 +2,46 @@
   <div class="home-right-plate">
     <div class="home-right-plate-title">
       <div class="title-left">
-        <img
-          v-if="showIcon"
-          :src="titleIcon"
-          alt
-          class="categroy-icon"
-        />
+        <img v-if="showIcon" :src="titleIcon" alt class="categroy-icon" />
         {{ title }}
       </div>
       <nuxt-link :to="{path:'/secondaryClassification',query:{id:categoryId,name:categoryName}}">
         <!-- this.$router.push({ path: '/secondaryClassification', query: { id, name } }) -->
-        <div
-          v-if="isShowRight"
-          class="title-right"
-        >
+        <div v-if="isShowRight" class="title-right">
           查看更多>
         </div>
       </nuxt-link>
     </div>
-    <el-carousel
-      :interval="4000"
-      arrow="always"
-      height="440px"
-      indicatorPosition="none"
-    >
-      <el-carousel-item
-        v-for="(item, index) in dataList"
-        :key="index"
-      >
-        <div
-          v-for="(jtem, i) in item"
-          :key="i"
-          class="home-right-plate-item"
-        >
+    <el-carousel :interval="4000" arrow="always" height="440px" indicatorPosition="none">
+      <el-carousel-item v-for="(item, index) in dataList" :key="index">
+        <div v-for="(jtem, i) in item" :key="i" class="home-right-plate-item">
           <nuxt-link :to="{ path:'/productDetail',query: (item.needStatistics?{id: jtem.productId, flagId: jtem.id}:{id: jtem.productId})}">
             <div class="home-right-plate-item-img">
-              <img
-                :src="jtem.pic || defaultProductImg"
-                alt
-              />
+              <img :src="jtem.pic || defaultProductImg" alt />
             </div>
-            <div class="home-right-plate-item-title">
-              {{ jtem.name || jtem.productName }}
+            <div class="home-right-plate-item-title" :title="(jtem.brandName ? jtem.brandName : '') + ' ' + (jtem.name ? jtem.name : jtem.productName) + ' ' + (jtem.displayProductSn ? jtem.displayProductSn : '')">
+              {{
+              (jtem.brandName ? jtem.brandName : "") +
+              " " +
+              (jtem.name ? jtem.name : jtem.productName) +
+              " " +
+              (jtem.displayProductSn ? jtem.displayProductSn : "")
+              }}
+              <!-- {{ jtem.name || jtem.productName }} -->
             </div>
             <div class="home-right-plate-item-info">
               <div class="info-item">品牌：{{ jtem.brandName }}</div>
-              <div class="info-item">重量：{{ jtem.weight }}</div>
-              <div class="info-item">
-                最低起订量：{{ jtem.productMinimumPurchase }}件
-              </div>
+              <!-- <div class="info-item">重量：{{ jtem.weight }}</div>
+            <div class="info-item">
+              最低起订量：{{ jtem.productMinimumPurchase }}件
+            </div> -->
+              <div class="info-item">适用机型：{{ jtem.productApplyType }}</div>
+              <div class="info-item">件号：{{ jtem.displayProductSn }} </div>
             </div>
             <div class="home-right-plate-item-price">￥{{ jtem.price }}</div>
           </nuxt-link>
           <button @click.stop="joinCar(jtem)">
-            <img
-              :src="img"
-              alt
-            />加入购物车
+            <img :src="img" alt />加入购物车
           </button>
         </div>
       </el-carousel-item>

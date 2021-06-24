@@ -1,6 +1,6 @@
 // const URL = {
-//   development: "http://58.49.89.99:8056/front",
-//   production: "http://58.49.89.99:8056/front"
+//   test: "http://58.49.89.100:8056", // 测试环境接口地址
+//   production: "http://58.49.89.99:8056/front" // 正式环境接口地址
 // }[process.env.VUE_APP_API];
 export default {
   /*
@@ -13,10 +13,10 @@ export default {
   ** See https://nuxtjs.org/api/configuration-target
   */
   target: 'server',
-  // server: {
-  //   host: '0.0.0.0', // 可以让当前局域网内都可以访问
-  //   port: 8888
-  // },
+  server: {
+    host: '0.0.0.0', // 可以让当前局域网内都可以访问
+    port: 3000
+  },
   /*
   ** Headers of the page
   ** See https://nuxtjs.org/api/configuration-head
@@ -76,8 +76,10 @@ export default {
   ],
   // 环境变量配置
   env: {
-    dev: 'http://58.49.89.100:8056',
-    prod: 'http://58.49.89.100:8056'
+    dev: 'http://127.0.0.1:8056',
+    prod: 'http://127.0.0.1:8056'
+    // dev: 'http://58.49.89.100:8056',
+    // prod: 'http://58.49.89.100:8056'
   },
   /*
   ** Axios module configuration
@@ -88,7 +90,8 @@ export default {
   },
   proxy: {
     '/front': {
-      target: 'http://58.49.89.100:8056',
+      target: 'http://127.0.0.1:8056',
+      // target: 'http://58.49.89.100:8056',
       pathRewrite: { '^/front': '' },
       changeOrigin: true,
       // logLevel: 'debug',

@@ -186,7 +186,7 @@ export default {
       // this.$emit('collectStatusChange', item)
       if (!this.hasLogin) {
         this.$message.warning('请先登录')
-        this.$router.push('/login/loginIndex')
+        this.$router.push('/login')
         return
       }
       if (item.productCollectStatus === 1) {

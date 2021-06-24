@@ -1,11 +1,7 @@
 <template>
   <div class="secondary-left">
     <ul class="secondary-left-tab">
-      <nuxt-link
-        v-for="(item, index) in tabList"
-        :key="index"
-        :to="{ path: '/secondaryClassification', query: { id: item.id, name: item.name } }"
-      >
+      <nuxt-link v-for="(item, index) in tabList" :key="index" :to="{ path: '/secondaryClassification', query: { id: item.id, name: item.name } }">
         <li :class="{'li-active': activeTab == item.id || activeTab == item.itemId,}">
           {{ item.name || item.itemName }}
         </li>
@@ -13,19 +9,20 @@
     </ul>
     <div class="secondary-left-hot">
       <div class="secondary-left-hot-title">全部热销商品</div>
-      <nuxt-link
-        v-for="(item, index) in hotList"
-        :key="index"
-        :to="{ path: '/productDetail', query: { id: item.productId, flagId: item.id } }"
-      >
+      <nuxt-link v-for="(item, index) in hotList" :key="index" :to="{ path: '/productDetail', query: { id: item.productId, flagId: item.id } }">
         <div class="secondary-left-hot-item">
           <div class="item-img">
-            <img
-              :src="item.pic || item.defaultProductImg"
-              :alt="item.productName"
-            />
+            <img :src="item.pic || item.defaultProductImg" :alt="item.productName" />
           </div>
-          <div class="item-name">{{ item.productName }}</div>
+          <div class="item-name" :title="(item.brandName ? item.brandName : '') + ' ' + (item.productName ? item.productName : '') + ' ' + (item.productSn ? item.productSn : '') + ' ' + (item.productOldNumber ? '/' + item.productOldNumber : '')">{{
+            (item.brandName ? item.brandName : "") +
+            " " +
+            (item.productName ? item.productName : "") +
+            " " +
+            (item.productSn ? item.productSn : "") +
+            " " +
+            (item.productOldNumber ? '/' + item.productOldNumber : "")
+            }}</div>
           <div class="item-price">单价：￥{{ item.price }}</div>
         </div>
       </nuxt-link>

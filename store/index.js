@@ -12,9 +12,9 @@ export const actions = {
   //   return await getProductData({ id, params })
   // }
   async nuxtServerInit ({ dispatch, commit, state }, { req }) {
-    console.log('from nuxtSeverInit')
+    // console.log('from nuxtSeverInit')
     // console.log(req.headers.cookie)
-    console.log(typeof req.headers.cookie)
+    // console.log(typeof req.headers.cookie)
     let cookies = req.headers.cookie
     let myToken = ''
     // await dispatch({ type: 'common/getNav' })
@@ -24,7 +24,7 @@ export const actions = {
     // await dispatch({ type: 'common/getFriendLink' })
     if (cookies && cookies.includes('loginToken')) {
       cookies = decodeURI(cookies)
-      console.log('进来cookies了')
+      // console.log('进来cookies了')
       if (cookies.includes(';')) {
         myToken = cookies.split(';').filter(v => {
           return v.includes('loginToken')
@@ -32,9 +32,9 @@ export const actions = {
       } else {
         myToken = cookies.split('=')[1]
       }
-      console.log(myToken + ' !!!!!!!!!!!from nuxtServeLint')
+      // console.log(myToken + ' !!!!!!!!!!!from nuxtServeLint')
       await dispatch('user/SingleSetToken', myToken).then(() => {
-        console.log('单独设置token  resolve状态')
+        // console.log('单独设置token  resolve状态')
       })
       // await dispatch('user/GetInfo').then(() => {
       //   console.log('获取用户信息 resolve状态')
